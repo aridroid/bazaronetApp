@@ -54,6 +54,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                     ],
                     elevation: 0.0,
                     bottom: TabBar(
+                      indicatorColor: Colors.white,
                       tabs: snapshot.data.data.map((e) {
                         return Text(e.name);
                       }
@@ -62,22 +63,36 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                     ),
                   ),
                   backgroundColor: Color.fromRGBO(239, 121, 57, 1),
-                  body: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0)),
-                          color: Color.fromRGBO(255, 241, 232, 1)),
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        color: Color.fromRGBO(255, 241, 232, 1),
-                        child: ListView(
-                          children: [
+                  body: TabBarView(
+                    children: snapshot.data.data.map((e) {
+                      return Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(15.0),
+                                  topLeft: Radius.circular(15.0)),
+                              color: Color.fromRGBO(255, 241, 232, 1)),
+                          child: Card(
+                            clipBehavior: Clip.hardEdge,
+                            color: Color.fromRGBO(255, 241, 232, 1),
+                            child:
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding, right: _minimumPadding),
+                                    margin: EdgeInsets.only(bottom: _minimumPadding),
+                                    child: Text("350 items found"),
+                                    alignment: Alignment.center,
+                                  ),
 
-                          ],
-                        ),
-                      )
-                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                      );
+                    }).toList(),
+                  )
                 )
             );
           }
