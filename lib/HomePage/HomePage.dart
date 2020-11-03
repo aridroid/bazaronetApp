@@ -1,3 +1,4 @@
+import 'package:bazaronet_fresh/CartPage/CartPage.dart';
 import 'package:bazaronet_fresh/HomePage/home.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +23,7 @@ class _HomePageState extends State<HomePage> {
     Text(
       'Index 1: My Order',
     ),
-    Text(
-      'Index 2: Cart',
-    ),
+    Cart(),
     Text(
       'Index 3: Profile'
     )
