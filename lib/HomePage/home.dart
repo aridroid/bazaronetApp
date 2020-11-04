@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                         color: Color.fromRGBO(239, 121, 57, 1),
-                        child: Text("Within 2 hours delivary", style: TextStyle(
+                        child: Text("Within 2 hours delivery", style: TextStyle(
                             color: Colors.white
                         ),
                         ),
@@ -114,7 +114,6 @@ class _HomeState extends State<Home> {
                   child: FutureBuilder<CategoryModel>(
                     future: _homeRepository.getCategory(),
                     builder: (context, snapshot) {
-                      print(snapshot);
                       if (!snapshot.hasData) {
                         return Center(
                           child:
@@ -140,7 +139,7 @@ class _HomeState extends State<Home> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(15)
                                   ),
                                   margin: EdgeInsets.only(right: _minimumPadding),
                                   child: Image.network(

@@ -1,7 +1,10 @@
+import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class productdetails extends StatefulWidget {
+  Data data;
+  productdetails({this.data});
   @override
   _productdetailsState createState() => _productdetailsState();
 }
@@ -13,12 +16,9 @@ class _productdetailsState extends State<productdetails> {
       height: 150.0,
       child: Carousel(
         boxFit: BoxFit.fitHeight,
-        images: [
-          AssetImage("images/diapers.jpg"),
-          AssetImage("images/diapers.jpg"),
-          AssetImage("images/diapers.jpg"),
-          AssetImage("images/diapers.jpg"),
-        ],
+        images: widget.data.image.map((image) {
+          return Image.network('http://139.59.91.150:3333/uploads/'+image);
+        }).toList(),
         autoplay: true,
         animationCurve: Curves.fastOutSlowIn,
         animationDuration: Duration(milliseconds: 1000),
@@ -51,32 +51,42 @@ class _productdetailsState extends State<productdetails> {
             child: ListView(
                 shrinkWrap: true,
                 children: [
-                  SizedBox(height: 10.0,),
                   Container(
                     child: image_carousel,
                   ),
                   Column(
                     children: [
                       Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Text("Pampers Diapers - 76 Pieces",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
-                          ),
-                          Spacer(),
-                          IconButton(
-                            icon: Icon(Icons.favorite_border),
-                          )
-                        ],
-                      ),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.only(top: _minimumPadding, left: _minimumPadding),
+                                  child: Text(
+                                    widget.data.name,style:
+                                  TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                  ),
+                                )
+                            ),
+                            IconButton(
+                              alignment: Alignment.topRight,
+                              icon: Icon(Icons.favorite_border),
+                            ),
+                          ],
+                        ),
                       Row(
                         children: [
                           Padding(
-                            padding:  EdgeInsets.only(left: 10.0),
+                            padding: EdgeInsets.only(left: _minimumPadding),
                             child: Icon(Icons.star,color: Colors.yellow[800],),
                           ),
                           Padding(
-                            padding:  EdgeInsets.only(right: 5.0),
+                            padding:  EdgeInsets.only(
+                                right: _minimumPadding
+                            ),
                             child: Text("4.2",style: TextStyle(color: Colors.yellow[800]),),
                           ),
                           Text("125 reviews",style: TextStyle(color: Colors.grey),)
@@ -86,13 +96,15 @@ class _productdetailsState extends State<productdetails> {
                         children: [
                           Padding(
                             padding:  EdgeInsets.only(left: 10),
-                            child: Text("Rs.10.00",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),),
+                            child: Text("Rs. "+widget.data.actualPrice.toString(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                           ),
                           Padding(
                             padding:  EdgeInsets.only(left:10.0,right: 10.0),
-                            child: Text("20.00",style: TextStyle(color: Colors.grey),),
+                            child: Text(widget.data.price.toString(),style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough
+                            ),),
                           ),
-                          Text("50% OFF",style: TextStyle(color: Colors.amber,fontSize: 18,fontWeight: FontWeight.bold),)
                         ],
                       ),
                       Divider(color: Colors.grey,),
@@ -332,6 +344,9 @@ class _productdetailsState extends State<productdetails> {
                             child: FlatButton(
                               color: Colors.white,
                               child: Text("Change"),
+                              onPressed: () {
+
+                              },
                             ),
                           ),
                         ],
@@ -364,13 +379,7 @@ class _productdetailsState extends State<productdetails> {
                       SizedBox(height: 10,),
                       Padding(
                         padding:  EdgeInsets.only(left:10.0),
-                        child: Text('Lorem ipsum, or lipsum as it is sometimes known, is dummytext'
-                            ' used in laying out print, graphic or web designs.'
-                            ' Thepassage is attributed to an unknown typesetter in the 15thcentury'
-                            ' who is thought to have scrambled parts of Cicero'
-                            '''
- De Finibus Bonorum et Malorum for use in a type specimen book''' '''
-)'''),
+                        child: Text(widget.data.description),
                       ),
                       Divider(color: Colors.grey,),
                       Row(

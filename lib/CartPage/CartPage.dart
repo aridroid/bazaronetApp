@@ -122,21 +122,18 @@ class _cartState extends State<Cart> {
                                         ),
                                       ),
                                     Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
+                                        child:
                                             Container(
                                               alignment: Alignment.topRight,
                                               child: IconButton(
+                                                alignment: Alignment.topRight,
                                                   icon: Icon(
                                                     Icons
                                                         .delete_outline,
                                                   ),
                                                   onPressed: () {}),
                                             ),
-                                            Spacer(),
-                                          ],
-                                        ))
+                                        )
                                   ],
                                 ),
                               ),
