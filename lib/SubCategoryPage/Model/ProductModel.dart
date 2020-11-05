@@ -44,7 +44,7 @@ class Data {
   int quantity;
   String quantityClass;
   String dimensionsClass;
-  Null weight;
+  int weight;
   String weightClass;
   String description;
   String dateAdded;

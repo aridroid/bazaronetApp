@@ -2,6 +2,8 @@ import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as dom;
 class productdetails extends StatefulWidget {
   Data data;
   productdetails({this.data});
@@ -10,9 +12,12 @@ class productdetails extends StatefulWidget {
 }
 class _productdetailsState extends State<productdetails> {
   double _minimumPadding = 5.0;
+  List<String> size=["XS","S","M","L","XL","XXL"];
+  List<String> quantity=["10P","20P","30P","40P","50P","60P"];
   @override
   Widget build(BuildContext context) {
     Widget image_carousel = new Container(
+      padding: EdgeInsets.only(top: _minimumPadding*2),
       height: 150.0,
       child: Carousel(
         boxFit: BoxFit.fitHeight,
@@ -47,15 +52,18 @@ class _productdetailsState extends State<productdetails> {
                     topRight: const Radius.circular(15.0))),
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(right: _minimumPadding, left: _minimumPadding),
-            child: ListView(
-                shrinkWrap: true,
+            child: Column(
                 children: [
+                  Expanded(child:
                   Container(
-                    child: image_carousel,
-                  ),
-                  Column(
+                    padding: EdgeInsets.only(left: _minimumPadding, right: _minimumPadding),
+                    child:
+                      ListView(
+                    shrinkWrap: true,
                     children: [
+                      Container(
+                        child: image_carousel,
+                      ),
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -111,207 +119,85 @@ class _productdetailsState extends State<productdetails> {
                       Row(
                         children: [
                           Padding(
-                            padding:  EdgeInsets.only(left:10.0),
+                            padding:  EdgeInsets.only(left: _minimumPadding*2, bottom: _minimumPadding*2),
                             child: Text("Select size",style: TextStyle(color: Colors.grey),),
                           )
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Row(
-                        children: [
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("XS"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("S"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("M"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("L"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("XL"),
-                            ),
-                          ),
-                        ],
+                      Container(
+                        padding: EdgeInsets.only(left: 5,right: 5),
+                        height: 30,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: size.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return  Row(
+                                children: [
+                                  Container(
+                                    margin:EdgeInsets.only(left:2.5,right: 2.5),
+                                    height: MediaQuery.of(context).size.height*.1,
+                                    width: MediaQuery.of(context).size.width*.2,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: new BorderRadius.only(
+                                          topLeft: const Radius.circular(40.0),
+                                          topRight: const Radius.circular(40.0),
+                                          bottomLeft:  const Radius.circular(40.0),
+                                          bottomRight:  const Radius.circular(40.0),
+                                        )
+                                    ),
+                                    child: FlatButton(
+                                      color: Colors.white,
+                                      child: Text("${size[index]}"),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                        ),
                       ),
                       Divider(color: Colors.grey,),
                       Row(
                         children: [
                           Padding(
-                            padding:  EdgeInsets.only(left:10.0),
+                            padding:  EdgeInsets.only(left: _minimumPadding*2, bottom: _minimumPadding*2),
                             child: Text("Select Quantity",style: TextStyle(color: Colors.grey),),
                           )
                         ],
                       ),
-                      SizedBox(height: 10.0,),
-                      Row(
-                        children: [
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("10P"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("20P"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("30P"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("40P"),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
-                            child: FlatButton(
-                              color: Colors.white,
-                              child: Text("50P"),
-                            ),
-                          )
-                        ],
+                      Container(
+                        padding: EdgeInsets.only(left: 5,right: 5),
+                        height: 30,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: quantity.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return  Row(
+                                children: [
+                                  Container(
+                                    margin:EdgeInsets.only(left:2.5,right: 2.5),
+                                    height: MediaQuery.of(context).size.height*.1,
+                                    width: MediaQuery.of(context).size.width*.2,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: new BorderRadius.only(
+                                          topLeft: const Radius.circular(40.0),
+                                          topRight: const Radius.circular(40.0),
+                                          bottomLeft:  const Radius.circular(40.0),
+                                          bottomRight:  const Radius.circular(40.0),
+                                        )
+                                    ),
+                                    child: FlatButton(
+                                      color: Colors.white,
+                                      child: Text("${quantity[index]}"),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                        ),
                       ),
                       Divider(color: Colors.grey,),
                       Row(
@@ -329,23 +215,148 @@ class _productdetailsState extends State<productdetails> {
                           ),
                           Text("Elgin Road,700063",style: TextStyle(color: Colors.black,fontSize: 15),),
                           Spacer(),
-                          Container(
-                            height: 30,
-                            width: 90,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(40.0),
-                                  topRight: const Radius.circular(40.0),
-                                  bottomLeft:  const Radius.circular(40.0),
-                                  bottomRight:  const Radius.circular(40.0),
-                                )
-                            ),
+                          ButtonTheme(
+                            height: 30.0,
                             child: FlatButton(
-                              color: Colors.white,
-                              child: Text("Change"),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Colors.black,
+                                    width: 1,
+                                    style: BorderStyle.solid
+                                ),
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                              child: Text("Change",),
                               onPressed: () {
-
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    builder: (builder) {
+                                      return Container(
+                                        padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                                        ),
+                                        decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.only(
+                                                  topLeft: const Radius.circular(25.0),
+                                                  topRight: const Radius.circular(25.0))),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.close,
+                                                    size: 30.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child:
+                                                    Text(
+                                                      "Use Pincode To Check Delivery Info",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.bold),
+                                                    ),
+                                              )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    margin:
+                                                    EdgeInsets.only(left: 15),
+                                                    height: 45,
+                                                    width: 250,
+                                                    child: TextField(
+                                                      decoration: InputDecoration(
+                                                        hintText: 'Enter Pincode',
+                                                        border:
+                                                        new OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 10),
+                                                  height: 45,
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.yellow[700],
+                                                      borderRadius:
+                                                      new BorderRadius.only(
+                                                        bottomRight:
+                                                        Radius.circular(10),
+                                                        bottomLeft:
+                                                        Radius.circular(10),
+                                                        topLeft:
+                                                        Radius.circular(10),
+                                                        topRight:
+                                                        Radius.circular(10),
+                                                      )),
+                                                  child: FlatButton(
+                                                    child: Text(
+                                                      "Check",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                "or",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 30,
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: MediaQuery.of(context).size.width*0.25,
+                                                  bottom: _minimumPadding*2
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.gps_fixed,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  Text(
+                                                    "Use my current location",
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontSize: 18),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               },
                             ),
                           ),
@@ -379,7 +390,18 @@ class _productdetailsState extends State<productdetails> {
                       SizedBox(height: 10,),
                       Padding(
                         padding:  EdgeInsets.only(left:10.0),
-                        child: Text(widget.data.description),
+                        child: Html(
+                          data: widget.data.description,
+                          padding: EdgeInsets.all(8.0),
+                          customRender: (node, children) {
+                            if (node is dom.Element) {
+                              switch (node.localName) {
+                                case "custom_tag": // using this, you can handle custom tags in your HTML
+                                  return Column(children: children);
+                              }
+                            }
+                          },
+                        ),
                       ),
                       Divider(color: Colors.grey,),
                       Row(
@@ -398,25 +420,20 @@ class _productdetailsState extends State<productdetails> {
                         ],
                       ),
                       Divider(color: Colors.grey,),
-                      SizedBox(height: 7.0,),
-                      Container(
-                        height: MediaQuery.of(context).size.height*.07,
-                        width: MediaQuery.of(context).size.width*.95,
-                        decoration: BoxDecoration(
-                            color: Colors.yellow[800],
-                            borderRadius: new BorderRadius.only(
-                              topLeft:  Radius.circular(20.0),
-                              topRight:  Radius.circular(20.0),
-                              bottomLeft:   Radius.circular(20.0),
-                              bottomRight:   Radius.circular(20.0),
-                            )
-                        ),
-                        child: FlatButton(
-                          child: Text("Add To Cart",style: TextStyle(color: Colors.white,fontSize:18),),
-                        ),
-                      ),
                     ],
-                  )
+                  ),
+                  ),),
+                  Container(
+                    height: 50.0,
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(top: _minimumPadding*2),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(239, 121, 57, 1),
+                    ),
+                    child: FlatButton(
+                      child: Text("Add To Cart",style: TextStyle(color: Colors.white,fontSize:18),),
+                    ),
+                  ),
                 ]
             )
         )

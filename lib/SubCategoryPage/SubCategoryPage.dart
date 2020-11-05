@@ -60,12 +60,29 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                       ],
                       elevation: 0.0,
                       bottom: TabBar(
+                        labelColor: Color.fromRGBO(239, 121, 57, 1),
+                        unselectedLabelColor: Colors.white,
                         indicatorColor: Colors.white,
+                        indicator: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15)
+                            ),
+                            color: Colors.white
+                        ),
                         tabs: snapshot.data.data.map((e) {
-                          return Text(e.name);
+                          return Container(
+                            padding: EdgeInsets.only(bottom: _minimumPadding*2, top: _minimumPadding*2),
+                            child: Text(
+                              e.name, style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0
+                            ),
+                            ),
+                          );
                         }).toList(),
                         isScrollable:
-                        snapshot.data.data.length > 4 ? true : false,
+                        snapshot.data.data.length > 2 ? true : false,
                       ),
                     ),
                     backgroundColor: Color.fromRGBO(239, 121, 57, 1),
@@ -86,7 +103,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                 );
                               }
                               else {
-                                print("Snapshot 1");
+                                print("Snapshot 2");
                                 print(snapshot2);
                                 return Container(
                                   decoration: BoxDecoration(
@@ -178,7 +195,8 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                             Container(
                                                               padding: EdgeInsets.only(
                                                                   top: _minimumPadding *
-                                                                      2),
+                                                                      2,
+                                                              bottom: _minimumPadding*2),
                                                               child: Expanded(
                                                                 child: Column(
                                                                   crossAxisAlignment:
@@ -187,38 +205,59 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                   children: [
                                                                     Text(
                                                                         snapshot2.data.data[index].name.length > 25 ?
-                                                                        '${snapshot2.data.data[index].name.substring(0,24)}...': snapshot2.data.data[index].name),
+                                                                        '${snapshot2.data.data[index].name.substring(0,24)}...': snapshot2.data.data[index].name,
+                                                                    style: TextStyle(
+                                                                      fontWeight: FontWeight.bold,
+                                                                      fontSize: 18.0
+                                                                    ),),
+                                                                    Spacer(),
                                                                     Row(
                                                                       children: [
                                                                         Icon(
                                                                           Icons.star,
-                                                                          color: Colors
-                                                                              .amber,
+                                                                          color: Color.fromRGBO(239, 121, 57, 1),
+                                                                          size: 15.0,
                                                                         ),
                                                                         Text(
                                                                           "  4.2",
                                                                           style: TextStyle(
-                                                                              color: Colors
-                                                                                  .amber),
+                                                                              color: Color.fromRGBO(239, 121, 57, 1),
+                                                                          fontSize: 12.0,
+                                                                              fontStyle: FontStyle.italic),
                                                                         ),
                                                                         Text(
-                                                                            " 125 Reviews")
+                                                                            " 125 Reviews",
+                                                                        style: TextStyle(
+                                                                          fontSize: 12.0,
+                                                                          fontStyle: FontStyle.italic
+                                                                        ),)
                                                                       ],
                                                                     ),
+                                                                    Spacer(),
                                                                     Row(
                                                                       children: [
-                                                                        Text("₹  "+snapshot2.data.data[index].actualPrice.toString()),
-                                                                        Text("  "+snapshot2.data.data[index].price.toString(), style: TextStyle(
-                                                                            decoration: TextDecoration.lineThrough
+                                                                        Text("Rs."+snapshot2.data.data[index].actualPrice.toString()+" ",
+                                                                          style: TextStyle(
+                                                                              color: Color.fromRGBO(239, 121, 57, 1),
+                                                                              fontSize: 15.0,
+                                                                              fontWeight: FontWeight.bold),),
+                                                                        Text(" Rs."+snapshot2.data.data[index].price.toString(), style: TextStyle(
+                                                                            decoration: TextDecoration.lineThrough,
+                                                                          color: Colors.grey,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontSize: 12.0
                                                                         ),),
                                                                       ],
                                                                     ),
+                                                                    Spacer(),
                                                                     Row(
                                                                       children: [
-                                                                        Icon(Icons
-                                                                            .directions_car_sharp),
-                                                                        Text(
-                                                                            "  Delivery within 2 hours")
+                                                                        Text("Delivery within 2 hours",
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 12.0
+                                                                          ),
+                                                                        )
                                                                       ],
                                                                     )
                                                                   ],

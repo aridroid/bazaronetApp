@@ -138,15 +138,16 @@ class _HomeState extends State<Home> {
                                   );
                                 },
                                 child: Container(
+                                  width: 125,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15)
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: NetworkImage('http://139.59.91.150:3333/uploads/' +
+                                          snapshot.data.data[index].image,),
+                                      fit: BoxFit.fill
+                                    )
                                   ),
                                   margin: EdgeInsets.only(right: _minimumPadding),
-                                  child: Image.network(
-                                      'http://139.59.91.150:3333/uploads/' +
-                                          snapshot.data.data[index].image,
-                                      fit: BoxFit.fill
-                                  ),
                                 ),
                               );
                             }
@@ -241,15 +242,16 @@ class _HomeState extends State<Home> {
 
                                       },
                                       child: Container(
+                                        width: 125,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                                image: NetworkImage('http://139.59.91.150:3333/uploads/' +
+                                                    snapshot.data.data[index].image,),
+                                                fit: BoxFit.fill
+                                            )
                                         ),
                                         margin: EdgeInsets.only(right: _minimumPadding),
-                                        child: Image.network(
-                                            'http://139.59.91.150:3333/uploads/' +
-                                                snapshot.data.data[index].image,
-                                            fit: BoxFit.fill
-                                        ),
                                       ),
                                     );
                                   }
@@ -309,15 +311,16 @@ class _HomeState extends State<Home> {
 
                                       },
                                       child: Container(
+                                        width: 125,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                                image: NetworkImage('http://139.59.91.150:3333/uploads/' +
+                                                    snapshot.data.data[index].image,),
+                                                fit: BoxFit.fill
+                                            )
                                         ),
                                         margin: EdgeInsets.only(right: _minimumPadding),
-                                        child: Image.network(
-                                            'http://139.59.91.150:3333/uploads/' +
-                                                snapshot.data.data[index].image,
-                                            fit: BoxFit.fill
-                                        ),
                                       ),
                                     );
                                   }
