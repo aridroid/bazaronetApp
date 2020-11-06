@@ -85,7 +85,10 @@ class _HomeState extends State<Home> {
                     )
                     ),
                     Expanded(
-                        child: Image.asset('images/shopping-bag.png', height: 20.0, alignment: Alignment.topLeft,)
+                        child: Image.asset(
+                          'images/shopping-bag.png',
+                          height: 20.0, alignment: Alignment.topLeft,
+                        )
                     ),
                     ButtonTheme(
                       height: 30.0,

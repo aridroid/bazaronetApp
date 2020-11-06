@@ -166,8 +166,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                         child: Row(
                                                           children: [
                                                             Container(
-                                                              margin: EdgeInsets.only(
-                                                                  right:
+                                                              margin: EdgeInsets.all(
                                                                   _minimumPadding),
                                                               width:
                                                               MediaQuery
@@ -190,13 +189,15 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                         'http://139.59.91.150:3333/uploads/'+
                                                                             snapshot2.data.data[index].image[0]),
                                                                     fit: BoxFit.fill,
+
                                                                   )),
                                                             ),
                                                             Container(
                                                               padding: EdgeInsets.only(
                                                                   top: _minimumPadding *
                                                                       2,
-                                                              bottom: _minimumPadding*2),
+                                                              bottom: _minimumPadding*2,
+                                                              left: _minimumPadding),
                                                               child: Expanded(
                                                                 child: Column(
                                                                   crossAxisAlignment:
@@ -204,8 +205,8 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                       .start,
                                                                   children: [
                                                                     Text(
-                                                                        snapshot2.data.data[index].name.length > 25 ?
-                                                                        '${snapshot2.data.data[index].name.substring(0,24)}...': snapshot2.data.data[index].name,
+                                                                        snapshot2.data.data[index].name.length > 19 ?
+                                                                        '${snapshot2.data.data[index].name.substring(0,19)}...': snapshot2.data.data[index].name,
                                                                     style: TextStyle(
                                                                       fontWeight: FontWeight.bold,
                                                                       fontSize: 18.0

@@ -1,3 +1,4 @@
+import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ class productdetails extends StatefulWidget {
 }
 class _productdetailsState extends State<productdetails> {
   double _minimumPadding = 5.0;
+  bool isOpen = true;
   List<String> size=["XS","S","M","L","XL","XXL"];
   List<String> quantity=["10P","20P","30P","40P","50P","60P"];
   @override
@@ -384,24 +386,37 @@ class _productdetailsState extends State<productdetails> {
                             child: Text("Product Details"),
                           ),
                           Spacer(),
-                          Text("All Details",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          RaisedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isOpen = !isOpen;
+                                });
+                              },
+                            elevation: 0.0,
+                            color: Colors.white,
+                            child: Text(isOpen ? "Collapse" : "All Details",
+                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Padding(
-                        padding:  EdgeInsets.only(left:10.0),
-                        child: Html(
-                          data: widget.data.description,
-                          padding: EdgeInsets.all(8.0),
-                          customRender: (node, children) {
-                            if (node is dom.Element) {
-                              switch (node.localName) {
-                                case "custom_tag": // using this, you can handle custom tags in your HTML
-                                  return Column(children: children);
-                              }
-                            }
-                          },
-                        ),
+                      Visibility(
+                        visible: isOpen,
+                          child: Padding(
+                            padding:  EdgeInsets.only(left:_minimumPadding*2, top: _minimumPadding*2),
+                            child: Html(
+                              data: widget.data.description,
+                              padding: EdgeInsets.all(8.0),
+                              customRender: (node, children) {
+                                if (node is dom.Element) {
+                                  switch (node.localName) {
+                                    case "custom_tag": // using this, you can handle custom tags in your HTML
+                                      return Column(children: children);
+                                  }
+                                }
+                              },
+                            ),
+                          ),
                       ),
                       Divider(color: Colors.grey,),
                       Row(
@@ -431,6 +446,11 @@ class _productdetailsState extends State<productdetails> {
                         color: Color.fromRGBO(239, 121, 57, 1),
                     ),
                     child: FlatButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => loginpage())
+                        );
+                      },
                       child: Text("Add To Cart",style: TextStyle(color: Colors.white,fontSize:18),),
                     ),
                   ),

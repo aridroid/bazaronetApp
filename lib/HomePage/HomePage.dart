@@ -1,6 +1,7 @@
 import 'package:bazaronet_fresh/CartPage/CartPage.dart';
 import 'package:bazaronet_fresh/HomePage/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +31,10 @@ class _HomePageState extends State<HomePage> {
   ];
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(239, 121, 57, 1),
