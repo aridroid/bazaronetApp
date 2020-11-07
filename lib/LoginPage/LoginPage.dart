@@ -1,5 +1,7 @@
 import 'package:bazaronet_fresh/SignupPage/SignupPage.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
+
 class loginpage extends StatefulWidget {
   @override
   _loginpageState createState() => _loginpageState();
@@ -7,6 +9,9 @@ class loginpage extends StatefulWidget {
 
 class _loginpageState extends State<loginpage> {
   double _minimumPadding = 5.0;
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +29,11 @@ class _loginpageState extends State<loginpage> {
             ),
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child:  ListView(
-                children: [
-                  Container(
+            child:  Form(
+              key: _formKey,
+              child: ListView(
+                  children: [
+                    Container(
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.only(top: _minimumPadding*8, bottom: _minimumPadding*8),
                       alignment: Alignment.center,
@@ -46,77 +53,68 @@ class _loginpageState extends State<loginpage> {
                             fontSize: 35,fontWeight: FontWeight.bold
                         ),
                       ),
-                  ),
-                  Theme(
-                    data: new ThemeData(
-                      primaryColor:Color.fromRGBO(239, 121, 57, 1),
-                      primaryColorDark: Color.fromRGBO(239, 121, 57, 1),
                     ),
-                    child: Container(
-                        margin: EdgeInsets.only(
-                            left: _minimumPadding*3,
-                            right: _minimumPadding*3
-                        ),
-                        height:45,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Enter Email',
-                            border: new OutlineInputBorder(
-                              borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
-                            ),
+                    Theme(
+                      data: new ThemeData(
+                        primaryColor:Color.fromRGBO(239, 121, 57, 1),
+                        primaryColorDark: Color.fromRGBO(239, 121, 57, 1),
+                      ),
+                      child: Container(
+                          margin: EdgeInsets.only(
+                              left: _minimumPadding*3,
+                              right: _minimumPadding*3,
+                              top: _minimumPadding*4
                           ),
-                        )),
-                  ),
-                  // Theme(
-                  //   data: new ThemeData(
-                  //     primaryColor:Color.fromRGBO(239, 121, 57, 1),
-                  //     primaryColorDark: Color.fromRGBO(239, 121, 57, 1),),
-                  //   child: Container(
-                  //       margin: EdgeInsets.only(left: _minimumPadding*3, right: _minimumPadding*3, top: _minimumPadding*4),
-                  //       height:45,
-                  //       child: TextField(
-                  //         decoration: InputDecoration(
-                  //           hintText: 'Enter Mobile No.',
-                  //           border: new OutlineInputBorder(
-                  //             borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
-                  //           ),
-                  //         ),
-                  //       )),
-                  // ),
-                  Theme(
-                    data: new ThemeData(
-                      primaryColor:Color.fromRGBO(239, 121, 57, 1),
-                      primaryColorDark: Color.fromRGBO(239, 121, 57, 1),
-                    ),
-                    child: Container(
-                        margin: EdgeInsets.only(left: _minimumPadding*3,
-                            right: _minimumPadding*3,
-                            top: _minimumPadding*4),
-                        height:45,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Enter Password',
-                            border: new OutlineInputBorder(
-                              borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
+                          child: TextFormField(
+                            controller: emailController,
+                            validator: (email)=>EmailValidator.validate(email)? null:"Invalid email address",
+                            decoration: InputDecoration(
+                              hintText: 'Enter Email',
+                              border: new OutlineInputBorder(
+                                borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
+                              ),
                             ),
-                          ),
-                        )),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: _minimumPadding*6,
+                          )),
                     ),
-                    // alignment: Alignment.center,
+                    Theme(
+                      data: new ThemeData(
+                        primaryColor:Color.fromRGBO(239, 121, 57, 1),
+                        primaryColorDark: Color.fromRGBO(239, 121, 57, 1),
+                      ),
+                      child: Container(
+                          margin: EdgeInsets.only(left: _minimumPadding*3,
+                              right: _minimumPadding*3,
+                              top: _minimumPadding*4),
+                          child: TextFormField(
+                            controller: passwordController,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Password field must contain a value';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Enter Password',
+                              border: new OutlineInputBorder(
+                                borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
+                              ),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: _minimumPadding*6,
+                      ),
+                      // alignment: Alignment.center,
                       child: ButtonTheme(
                         height: 50.0,
                         minWidth: 150.0,
                         child: RaisedButton(
                           color: Color.fromRGBO(239, 121, 57, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
                           onPressed: () {
+                            if(_formKey.currentState.validate()){
 
+                            }
                           },
                           child: Text("Login", style: TextStyle(
                               fontSize: 15.0,
@@ -125,32 +123,30 @@ class _loginpageState extends State<loginpage> {
                         ),
                       ),
                     ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: _minimumPadding*4,
-                    ),
-                    // alignment: Alignment.center,
-                    child: ButtonTheme(
-                      height: 50.0,
-                      minWidth: 150.0,
-                      child: RaisedButton(
-                        color: Color.fromRGBO(239, 121, 57, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(
-                              builder: (context) => SignupPage()));
-                        },
-                        child: Text("Don't have an account", style: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.white
-                        ),),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: _minimumPadding*4,
                       ),
-                    ),
-                  )
-                ]
+                      // alignment: Alignment.center,
+                      child: ButtonTheme(
+                        height: 50.0,
+                        minWidth: 150.0,
+                        child: RaisedButton(
+                          color: Color.fromRGBO(239, 121, 57, 1),
+                          onPressed: () {
+                            Navigator.push(
+                                context, MaterialPageRoute(
+                                builder: (context) => SignupPage()));
+                          },
+                          child: Text("Don't have an account", style: TextStyle(
+                              fontSize: 15.0,
+                              color: Colors.white
+                          ),),
+                        ),
+                      ),
+                    )
+                  ]
+              ),
             )
         )
     );

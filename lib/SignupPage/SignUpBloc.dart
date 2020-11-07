@@ -17,7 +17,7 @@ class SignupBloc {
       _signUpController.stream;
 
   SignupBloc() {
-    _signUpController = StreamController<ApiResponse<SignUpModel>>();
+    _signUpController = StreamController<ApiResponse<SignUpModel>>.broadcast();
     _signUpRepository = SignUpRepository();
 
   }
@@ -37,5 +37,6 @@ class SignupBloc {
 
   dispose() {
     _signUpController?.close();
+    signupSink.close();
   }
 }

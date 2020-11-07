@@ -91,6 +91,11 @@ dynamic _returnResponse(http.Response response) {
       var responseJson = json.decode(response.body.toString());
      // print(responseJson);
       return responseJson;
+    case 201:
+      print(response.body.toString());
+      var responseJson = json.decode(response.body.toString());
+      // print(responseJson);
+      return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());
     case 401:

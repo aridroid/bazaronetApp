@@ -5,6 +5,7 @@ import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -120,7 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Name field must contain a value';
+                                return "Mobile number field can't be NULL";
                               }
                               return null;
                             },
@@ -143,9 +144,10 @@ class _SignupPageState extends State<SignupPage> {
                               top: _minimumPadding*4),
                           child: TextFormField(
                             controller: passwordController,
+                              obscureText: true,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Name field must contain a value';
+                                return 'Password field must contain a value';
                               }
                               return null;
                             },
@@ -168,9 +170,6 @@ class _SignupPageState extends State<SignupPage> {
                         child:
                         RaisedButton(
                           color: Color.fromRGBO(239, 121, 57, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
                           onPressed: () {
                             if(_formKey.currentState.validate()){
                               Map body = new Map();
@@ -179,6 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                               body['name']=nameController.text;
                               body['password']=passwordController.text;
                               body['role']="USER";
+                              _formKey.currentState.reset();
                               _signupBloc.signUp(body);
                             }
                           },
@@ -200,10 +200,19 @@ class _SignupPageState extends State<SignupPage> {
                                     break;
                                   case Status.COMPLETED:
                                     print("Case 2:"+snapshot.data.data.sId);
+                                    navigateScreen(context);
                                     break;
                                   case Status.ERROR:
                                     print("Case 3");
-                                    print(snapshot);
+                                    Fluttertoast.showToast(
+                                        msg: "Email address and phone number must be unique",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                     return Text("Sign Up", style: TextStyle(
                                         fontSize: 15.0,
                                         color: Colors.white
@@ -211,30 +220,16 @@ class _SignupPageState extends State<SignupPage> {
                                     break;
                                 }
                               }
-                              else
+
                                 return Text("Sign Up", style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.white
-                              ));
+                                    fontSize: 15.0,
+                                    color: Colors.white
+                                ));
 
                             },
-
-
-
-
                           ),
                         ),
                       ),
-
-
-
-
-
-
-
-
-
-
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -246,9 +241,6 @@ class _SignupPageState extends State<SignupPage> {
                         minWidth: 150.0,
                         child: RaisedButton(
                           color: Color.fromRGBO(239, 121, 57, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
                           onPressed: () {
                             Navigator.push(
                               context, MaterialPageRoute(
@@ -266,6 +258,20 @@ class _SignupPageState extends State<SignupPage> {
             )
         )
     );
+  }
+
+  navigateScreen(context) async{
+    Future.delayed(Duration.zero, () async {
+      Fluttertoast.showToast(
+          msg: "Singup Successful",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          timeInSecForIosWeb: 1);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:
+      (context) => loginpage()));
+    });
   }
 
   @override
