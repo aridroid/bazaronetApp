@@ -1,4 +1,6 @@
+import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -7,18 +9,67 @@ class Cart extends StatefulWidget {
 
 class _cartState extends State<Cart> {
   double _minimumPadding = 5.0;
+  String userId;
+  bool CheckValue;
+  SharedPreferences prefs;
+  bool loading;
+
+  @override
+  void initState() {
+    loading = true;
+    getuserId();
+    ifHasUserId();
+  }
+
+  getuserId() async {
+    prefs = await SharedPreferences.getInstance();
+    String stringValue = prefs.getString('userId');
+    userId = stringValue;
+    print("Hello "+userId);
+  }
+
+  ifHasUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    bool checkValue = prefs.containsKey('userId');
+    CheckValue = checkValue;
+    print("In Async");
+    setLoading();
+  }
+
+  setLoading() {
+    setState(() {
+      loading = false;
+    });
+  }
+
+  removeValue() async {
+    prefs = await SharedPreferences.getInstance();
+    //Remove String
+    prefs.remove('userId');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: new BoxDecoration(
-          color: Color.fromRGBO(255, 241, 232, 1), //new Color.fromRGBO(255, 0, 0, 0.0),
-          borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(15.0),
-              topRight: const Radius.circular(15.0))
-      ),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Card(
+    if(loading){
+      return CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Color.fromRGBO(255,255,255,1)),
+      );
+    }
+    if(!CheckValue){
+      navigateScreen();
+      return Container();
+    }
+    else{
+      return Container(
+        decoration: new BoxDecoration(
+            color: Color.fromRGBO(255, 241, 232, 1), //new Color.fromRGBO(255, 0, 0, 0.0),
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(15.0),
+                topRight: const Radius.circular(15.0))
+        ),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Card(
           clipBehavior: Clip.hardEdge,
           color: Color.fromRGBO(255, 241, 232, 1),
           child: Expanded(
@@ -85,55 +136,55 @@ class _cartState extends State<Cart> {
                                       padding: EdgeInsets.only(
                                           top: _minimumPadding *
                                               2),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Text(
-                                                "Pampers Diapers - S 76 Pieces"),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.star,
-                                                  color: Colors
-                                                      .amber,
-                                                ),
-                                                Text(
-                                                  "  4.2",
-                                                  style: TextStyle(
-                                                      color: Colors
-                                                          .amber),
-                                                ),
-                                                Text(
-                                                    " 125 Reviews")
-                                              ],
-                                            ),
-                                            Text("₹  10.00"),
-                                            Row(
-                                              children: [
-                                                Icon(Icons
-                                                    .directions_car_sharp),
-                                                Text(
-                                                    "  Delivery within 2 hours")
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Text(
+                                              "Pampers Diapers - S 76 Pieces"),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors
+                                                    .amber,
+                                              ),
+                                              Text(
+                                                "  4.2",
+                                                style: TextStyle(
+                                                    color: Colors
+                                                        .amber),
+                                              ),
+                                              Text(
+                                                  " 125 Reviews")
+                                            ],
+                                          ),
+                                          Text("₹  10.00"),
+                                          Row(
+                                            children: [
+                                              Icon(Icons
+                                                  .directions_car_sharp),
+                                              Text(
+                                                  "  Delivery within 2 hours")
+                                            ],
+                                          )
+                                        ],
                                       ),
+                                    ),
                                     Expanded(
-                                        child:
-                                            Container(
-                                              alignment: Alignment.topRight,
-                                              child: IconButton(
-                                                alignment: Alignment.topRight,
-                                                  icon: Icon(
-                                                    Icons
-                                                        .delete_outline,
-                                                  ),
-                                                  onPressed: () {}),
+                                      child:
+                                      Container(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                            alignment: Alignment.topRight,
+                                            icon: Icon(
+                                              Icons
+                                                  .delete_outline,
                                             ),
-                                        )
+                                            onPressed: () {}),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -196,7 +247,13 @@ class _cartState extends State<Cart> {
               ],
             ),
           ),
-      ),
-    );
+        ),
+      );
+    }
+  }
+  navigateScreen() {
+    Navigator.push(context, MaterialPageRoute(builder:
+        (context) => loginpage(data: null)
+    ));
   }
 }

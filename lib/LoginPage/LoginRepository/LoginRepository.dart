@@ -6,7 +6,7 @@ class LoginRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<LoginModel> login(Map body) async {
-    final response = await _helper.post('api/users',body);
+    final response = await _helper.post('api/login',body);
     return LoginModel.fromJson(response);
   }
 

@@ -37,7 +37,6 @@ class _HomeState extends State<Home> {
                 child: FutureBuilder<BannerModel>(
                     future: _homeRepository.getBannerData(),
                     builder: (context, snapshot) {
-                      print(snapshot);
                       if (!snapshot.hasData) {
                         return Center(
                           child:
@@ -225,7 +224,6 @@ class _HomeState extends State<Home> {
                   child: FutureBuilder<CategoryModel>(
                       future: _homeRepository.getCategory(),
                       builder: (context, snapshot) {
-                        print(snapshot);
                         if (!snapshot.hasData) {
                           return Center(
                             child:
@@ -294,7 +292,6 @@ class _HomeState extends State<Home> {
                   child: FutureBuilder<CategoryModel>(
                       future: _homeRepository.getCategory(),
                       builder: (context, snapshot) {
-                        print(snapshot);
                         if (!snapshot.hasData) {
                           return Center(
                             child:

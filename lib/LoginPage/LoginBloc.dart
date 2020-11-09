@@ -21,13 +21,13 @@ class LoginBloc {
 
   }
 
-  signUp(Map body) async {
+  login(Map body) async {
     print("body");
     print(body);
     loginSink.add(ApiResponse.loading('Submitting'));
     try {
-      LoginModel signUpModel = await _loginRepository.login(body);
-      loginSink.add(ApiResponse.completed(signUpModel));
+      LoginModel loginModel = await _loginRepository.login(body);
+      loginSink.add(ApiResponse.completed(loginModel));
     } catch (e) {
       loginSink.add(ApiResponse.error(e.toString()));
       print(e);

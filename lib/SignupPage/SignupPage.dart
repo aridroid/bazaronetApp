@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
 class SignupPage extends StatefulWidget {
+  Data data;
+  SignupPage({this.data});
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -244,7 +247,7 @@ class _SignupPageState extends State<SignupPage> {
                           onPressed: () {
                             Navigator.push(
                               context, MaterialPageRoute(
-                                builder: (context) => loginpage()));
+                                builder: (context) => loginpage(data: widget.data)));
                           },
                           child: Text("Already have an account", style: TextStyle(
                               fontSize: 15.0,
@@ -263,14 +266,14 @@ class _SignupPageState extends State<SignupPage> {
   navigateScreen(context) async{
     Future.delayed(Duration.zero, () async {
       Fluttertoast.showToast(
-          msg: "Singup Successful",
+          msg: "Sign up Successful",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
       Navigator.pushReplacement(context, MaterialPageRoute(builder:
-      (context) => loginpage()));
+      (context) => loginpage(data: widget.data,)));
     });
   }
 

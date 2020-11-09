@@ -1,3 +1,4 @@
+import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -5,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 class productdetails extends StatefulWidget {
   Data data;
   productdetails({this.data});
@@ -14,8 +18,32 @@ class productdetails extends StatefulWidget {
 class _productdetailsState extends State<productdetails> {
   double _minimumPadding = 5.0;
   bool isOpen = true;
+  String userId;
+  bool CheckValue;
+  SharedPreferences prefs;
   List<String> size=["XS","S","M","L","XL","XXL"];
   List<String> quantity=["10P","20P","30P","40P","50P","60P"];
+
+
+  @override
+  void initState() {
+    getuserId();
+    print("Hello 2");
+    ifHasUserId();
+  }
+
+  getuserId() async {
+    prefs = await SharedPreferences.getInstance();
+    String stringValue = prefs.getString('userId');
+    userId = stringValue;
+  }
+
+  ifHasUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    bool checkValue = prefs.containsKey('userId');
+    CheckValue = checkValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget image_carousel = new Container(
@@ -447,9 +475,16 @@ class _productdetailsState extends State<productdetails> {
                     ),
                     child: FlatButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => loginpage())
-                        );
+                        if(CheckValue){
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => HomePage.second(selectedIndex: 2,))
+                          );
+                        }
+                        else {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => loginpage(data: widget.data,))
+                          );
+                        }
                       },
                       child: Text("Add To Cart",style: TextStyle(color: Colors.white,fontSize:18),),
                     ),

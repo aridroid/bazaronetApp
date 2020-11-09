@@ -1,22 +1,62 @@
+import 'dart:ffi';
+
 import 'package:bazaronet_fresh/CartPage/CartPage.dart';
 import 'package:bazaronet_fresh/HomePage/home.dart';
+import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  int selectedIndex;
+  HomePage(){
+    selectedIndex = 0;
+  }
+  HomePage.second({this.selectedIndex});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   double _minimumPadding = 5.0;
+  int _selectedIndex;
+  String userId;
+  bool CheckValue;
+  SharedPreferences prefs;
 
-  int _selectedIndex = 0;
+  @override
+  void initState() {
+    _selectedIndex = widget.selectedIndex;
+    // removeValue();
+    getuserId();
+    ifHasUserId();
+    print("In Init");
+  }
+
+  getuserId() async {
+    prefs = await SharedPreferences.getInstance();
+    String stringValue = prefs.getString('userId');
+    userId = stringValue;
+  }
+
+  ifHasUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    bool checkValue = prefs.containsKey('userId');
+    CheckValue = checkValue;
+    print("In Async");
+    // setWidget(CheckValue);
+  }
+
+  removeValue() async {
+    prefs = await SharedPreferences.getInstance();
+    //Remove String
+    prefs.remove('userId');
+  }
 
   void _onItemTapped(int index){
-    setState(() {
-      _selectedIndex = index;
-    });
+      setState(() {
+        _selectedIndex = index;
+      });
   }
 
   static List<Widget> _widgetOptions = <Widget>[
@@ -26,9 +66,10 @@ class _HomePageState extends State<HomePage> {
     ),
     Cart(),
     Text(
-      'Index 3: Profile'
+        'Index 3: Profile'
     )
   ];
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
