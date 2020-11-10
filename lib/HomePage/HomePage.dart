@@ -37,13 +37,16 @@ class _HomePageState extends State<HomePage> {
     prefs = await SharedPreferences.getInstance();
     String stringValue = prefs.getString('userId');
     userId = stringValue;
+    print("In getuserId");
+    print("userId "+userId);
   }
 
   ifHasUserId() async {
     prefs = await SharedPreferences.getInstance();
     bool checkValue = prefs.containsKey('userId');
     CheckValue = checkValue;
-    print("In Async");
+    print("In ifHasUserId");
+    print("userId "+CheckValue.toString());
     // setWidget(CheckValue);
   }
 
@@ -79,15 +82,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(239, 121, 57, 1),
+        leading: Container(
+          child: IconButton(
+              icon: Image.asset('images/menu.png', height: 20.0,),
+              onPressed: null),
+        ),
         title: Container(
+          padding: EdgeInsets.only(left: _minimumPadding*2),
           child: Row(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width*0.2,
-                child: IconButton(
-                    icon: Image.asset('images/menu.png', height: 20.0,),
-                    onPressed: null),
-              ),
               Image.asset('images/logo.png', width: 150.0)
             ],
           ),

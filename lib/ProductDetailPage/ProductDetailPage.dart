@@ -1,16 +1,20 @@
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
-import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
+import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
+import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailBloc.dart';
+import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart' as productData;
+import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class productdetails extends StatefulWidget {
-  Data data;
+  productData.Data data;
   productdetails({this.data});
   @override
   _productdetailsState createState() => _productdetailsState();
@@ -21,6 +25,7 @@ class _productdetailsState extends State<productdetails> {
   String userId;
   bool CheckValue;
   SharedPreferences prefs;
+  ProductDetailBloc _productDetailBloc;
   List<String> size=["XS","S","M","L","XL","XXL"];
   List<String> quantity=["10P","20P","30P","40P","50P","60P"];
 
@@ -30,6 +35,7 @@ class _productdetailsState extends State<productdetails> {
     getuserId();
     print("Hello 2");
     ifHasUserId();
+    _productDetailBloc = ProductDetailBloc();
   }
 
   getuserId() async {
@@ -476,9 +482,11 @@ class _productdetailsState extends State<productdetails> {
                     child: FlatButton(
                       onPressed: () {
                         if(CheckValue){
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => HomePage.second(selectedIndex: 2,))
-                          );
+                          Map body = new Map();
+                          body['customer_id'] = userId;
+                          body['product'] = widget.data.sId;
+                          body['quantity'] = "1";
+                          _productDetailBloc.addToCart(body);
                         }
                         else {
                           Navigator.push(context, MaterialPageRoute(
@@ -486,12 +494,73 @@ class _productdetailsState extends State<productdetails> {
                           );
                         }
                       },
-                      child: Text("Add To Cart",style: TextStyle(color: Colors.white,fontSize:18),),
+                      child: StreamBuilder<ApiResponse<AddToCartModel>>(
+                        stream: _productDetailBloc.productDetailPageStream,
+                        builder:(context, snapshot) {
+                          if(snapshot.hasData)
+                          {
+                            switch(snapshot.data.status)
+                            {
+                              case Status.LOADING:
+                                print("Case 1");
+                                print(snapshot);
+                                return CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Color.fromRGBO(255, 241, 232, 1),
+                                  ),
+                                );
+                                break;
+                              case Status.COMPLETED:
+                                navigateScreen(context);
+                                break;
+                              case Status.ERROR:
+                                print("Case 3");
+                                print(snapshot);
+                                Fluttertoast.showToast(
+                                    msg: "Failed",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0
+                                );
+                                return Text("Add To Cart", style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: Colors.white
+                                ));
+                                break;
+                            }
+                          }
+
+                          return Text(
+                            "Add To Cart",
+                            style: TextStyle(
+                                color: Colors.white,fontSize:18)
+                          );
+                        },
+                      ),
+
                     ),
                   ),
                 ]
             )
         )
     );
+  }
+
+  navigateScreen(context) async{
+    Future.delayed(Duration.zero, () async {
+      Fluttertoast.showToast(
+          msg: "Successfully added to Cart",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          timeInSecForIosWeb: 1);
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => HomePage.second(selectedIndex: 2))
+          );
+    });
   }
 }
