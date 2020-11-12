@@ -36,10 +36,12 @@ class _cartState extends State<Cart> {
   }
 
   addAmount(CartPageModel data, int index) {
-    setState(() {
-      cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
-      print("Cost: "+cost.toString());
-      checkOutButtonState = true;
+    Future.delayed(Duration.zero, () async {
+      setState(() {
+        cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
+        print("Cost: "+cost.toString());
+        checkOutButtonState = true;
+      });
     });
   }
 
@@ -76,8 +78,297 @@ class _cartState extends State<Cart> {
 
   removeValue() async {
     prefs = await SharedPreferences.getInstance();
-    //Remove String
     prefs.remove('userId');
+  }
+
+  returnFutureList() {
+    return Expanded(
+        child: FutureBuilder<CartPageModel>(
+            future: _cartRepository.getCartById(userId),
+            builder: (context, snapshot) {
+              if(!snapshot.hasData){
+                print("Loading");
+                return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                        Color.fromRGBO(255, 241, 232, 1),
+                      ),
+                    )
+                );
+              }
+              else{
+                print("Loaded");
+                return ListView.builder(
+                    itemCount: snapshot.data.data.length,
+                    itemBuilder: (context, index) {
+                      // addAmount(snapshot.data.data[index].product.actualPrice.roundToDouble());
+                      if(cost==0)
+                      {
+                          addAmount(snapshot.data,index);
+                      }
+                      _quantityController.add(snapshot.data.data[index].quantity);
+                      return InkWell(
+                        onTap: () {},
+                        child: Container(
+                          height: 120.0,
+                          margin: EdgeInsets.only(
+                              bottom: _minimumPadding,
+                              left: _minimumPadding,
+                              right: _minimumPadding),
+                          padding: EdgeInsets.only(
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(
+                                Radius.circular(15.0),
+                              ),
+                              color: Colors.white),
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(
+                                  15.0),
+                            ),
+                            elevation: 2.0,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.all(
+                                      _minimumPadding),
+                                  width:
+                                  MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width *
+                                      0.3,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.only(
+                                          topLeft: Radius
+                                              .circular(
+                                              15.0),
+                                          bottomLeft: Radius
+                                              .circular(
+                                              15.0)),
+                                      image:
+                                      DecorationImage(
+                                        image: NetworkImage(
+                                            'http://139.59.91.150:3333/uploads/'+
+                                                snapshot.data.data[index].product.image[0]),
+                                        fit: BoxFit.fill,
+
+                                      )),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        top: _minimumPadding *
+                                            2,
+                                        bottom: _minimumPadding*2,
+                                        left: _minimumPadding,
+                                        right: _minimumPadding
+                                    ),
+                                    child: Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                snapshot.data.data[index].product.name.length > 19 ?
+                                                '${snapshot.data.data[index].product.name.substring(0,19)}...': snapshot.data.data[index].product.name,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0
+                                                ),
+                                              ),
+                                              // Spacer(),
+                                              // InkWell(
+                                              //   onTap: () {
+                                              //
+                                              //   },
+                                              //   child:
+                                              //   Icon(
+                                              //     Icons.delete,
+                                              //     color: Colors.grey,
+                                              //   ),
+                                              // ),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: Color.fromRGBO(239, 121, 57, 1),
+                                                size: 15.0,
+                                              ),
+                                              Text(
+                                                "  4.2",
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(239, 121, 57, 1),
+                                                    fontSize: 12.0,
+                                                    fontStyle: FontStyle.italic),
+                                              ),
+                                              Text(
+                                                " 125 Reviews",
+                                                style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    fontStyle: FontStyle.italic
+                                                ),)
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Text("Rs."+snapshot.data.data[index].product.actualPrice.toString()+" ",
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(239, 121, 57, 1),
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.bold),),
+                                              Text(" Rs."+snapshot.data.data[index].product.price.toString(), style: TextStyle(
+                                                  decoration: TextDecoration.lineThrough,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12.0
+                                              ),),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Text("Delivery within 2 hours",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12.0
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              InkWell(
+                                                onTap: () {
+                                                  if(snapshot.data.data[index].quantity == 1){
+                                                    alert();
+                                                  }
+                                                  else{
+                                                    Map body = new Map();
+                                                    body['customer_id'] = userId;
+                                                    body['product'] = snapshot.data.data[index].product.sId;
+                                                    body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
+                                                    _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
+                                                    updateCart("minus", index);
+                                                  }
+                                                },
+                                                child:
+                                                Icon(
+                                                  Icons.remove_circle_outline,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Container(
+                                                child: StreamBuilder<ApiResponse<UpdateCartModel>>(
+                                                  stream: _cartBloc.cartPageStream,
+                                                  builder:(context, snapshot2) {
+                                                    if(snapshot2.hasData)
+                                                    {
+                                                      switch(snapshot2.data.status)
+                                                      {
+                                                        case Status.LOADING:
+                                                          print("Case 1");
+                                                          print(snapshot2);
+                                                          return Center(
+                                                            child: CircularProgressIndicator(
+                                                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                                                Color.fromRGBO(255, 241, 232, 1),
+                                                              ),
+                                                            ),
+                                                          );
+                                                          break;
+                                                        case Status.COMPLETED:
+                                                          reload();
+                                                          // return Text(
+                                                          //   snapshot2.data.data.data.quantity.toString(),
+                                                          //   style: TextStyle(
+                                                          //       color: Colors.black
+                                                          //   ),
+                                                          // );
+                                                          // cartModel = _cartRepository.getCartById(userId);
+                                                          // setState(() {
+                                                          //   cost =0;
+                                                          // });
+                                                          return Text(
+                                                            _quantityController[index].toString(),
+                                                            style: TextStyle(
+                                                                color: Colors.black
+                                                            ),
+                                                          );
+                                                          break;
+                                                        case Status.ERROR:
+                                                          print("Case 3");
+                                                          print(snapshot2);
+                                                          Fluttertoast.showToast(
+                                                              msg: "Failed",
+                                                              toastLength: Toast.LENGTH_SHORT,
+                                                              gravity: ToastGravity.CENTER,
+                                                              timeInSecForIosWeb: 1,
+                                                              backgroundColor: Colors.red,
+                                                              textColor: Colors.white,
+                                                              fontSize: 16.0
+                                                          );
+                                                          return Text(
+                                                            _quantityController[index].toString(),
+                                                            style: TextStyle(
+                                                                color: Colors.black
+                                                            ),
+                                                          );
+                                                          break;
+                                                      }
+                                                    }
+
+                                                    return Text(
+                                                      snapshot.data.data[index].quantity.toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.black
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              InkWell(
+                                                onTap: () {
+                                                  Map body = new Map();
+                                                  body['customer_id'] = userId;
+                                                  body['product'] = snapshot.data.data[index].product.sId;
+                                                  body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
+                                                  _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
+                                                  updateCart("plus", index);
+                                                },
+                                                child: Icon(
+                                                  Icons.add_circle_outline,
+                                                  color: Colors.grey,
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              }
+            }
+        )
+    );
   }
 
   @override
@@ -119,295 +410,7 @@ class _cartState extends State<Cart> {
           child: Expanded(
             child: Column(
               children: [
-                Expanded(
-                    child: FutureBuilder<CartPageModel>(
-                      future: _cartRepository.getCartById(userId),
-                      builder: (context, snapshot) {
-                        if(!snapshot.hasData){
-                          print("Loading");
-                          return Center(
-                              child: CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Color.fromRGBO(255, 241, 232, 1),
-                                ),
-                              )
-                          );
-                        }
-                        else{
-                          print("Loaded");
-                          return ListView.builder(
-                              itemCount: snapshot.data.data.length,
-                              itemBuilder: (context, index) {
-                               // addAmount(snapshot.data.data[index].product.actualPrice.roundToDouble());
-                              if(cost==0)
-                              {
-                                Future.delayed(Duration.zero, () async {
-                                  addAmount(snapshot.data,index);
-                                });
-                              }
-                              _quantityController.add(snapshot.data.data[index].quantity);
-                                return InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 120.0,
-                                    margin: EdgeInsets.only(
-                                        bottom: _minimumPadding,
-                                        left: _minimumPadding,
-                                        right: _minimumPadding),
-                                    padding: EdgeInsets.only(
-                                    ),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.all(
-                                          Radius.circular(15.0),
-                                        ),
-                                        color: Colors.white),
-                                    child: Card(
-                                      margin: EdgeInsets.zero,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            15.0),
-                                      ),
-                                      elevation: 2.0,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.all(
-                                                _minimumPadding),
-                                            width:
-                                            MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width *
-                                                0.3,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.only(
-                                                    topLeft: Radius
-                                                        .circular(
-                                                        15.0),
-                                                    bottomLeft: Radius
-                                                        .circular(
-                                                        15.0)),
-                                                image:
-                                                DecorationImage(
-                                                  image: NetworkImage(
-                                                      'http://139.59.91.150:3333/uploads/'+
-                                                          snapshot.data.data[index].product.image[0]),
-                                                  fit: BoxFit.fill,
-
-                                                )),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: _minimumPadding *
-                                                      2,
-                                                  bottom: _minimumPadding*2,
-                                                  left: _minimumPadding,
-                                                  right: _minimumPadding
-                                              ),
-                                              child: Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          snapshot.data.data[index].product.name.length > 19 ?
-                                                          '${snapshot.data.data[index].product.name.substring(0,19)}...': snapshot.data.data[index].product.name,
-                                                          style: TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              fontSize: 18.0
-                                                          ),
-                                                        ),
-                                                        // Spacer(),
-                                                        // InkWell(
-                                                        //   onTap: () {
-                                                        //
-                                                        //   },
-                                                        //   child:
-                                                        //   Icon(
-                                                        //     Icons.delete,
-                                                        //     color: Colors.grey,
-                                                        //   ),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.star,
-                                                          color: Color.fromRGBO(239, 121, 57, 1),
-                                                          size: 15.0,
-                                                        ),
-                                                        Text(
-                                                          "  4.2",
-                                                          style: TextStyle(
-                                                              color: Color.fromRGBO(239, 121, 57, 1),
-                                                              fontSize: 12.0,
-                                                              fontStyle: FontStyle.italic),
-                                                        ),
-                                                        Text(
-                                                          " 125 Reviews",
-                                                          style: TextStyle(
-                                                              fontSize: 12.0,
-                                                              fontStyle: FontStyle.italic
-                                                          ),)
-                                                      ],
-                                                    ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        Text("Rs."+snapshot.data.data[index].product.actualPrice.toString()+" ",
-                                                          style: TextStyle(
-                                                              color: Color.fromRGBO(239, 121, 57, 1),
-                                                              fontSize: 15.0,
-                                                              fontWeight: FontWeight.bold),),
-                                                        Text(" Rs."+snapshot.data.data[index].product.price.toString(), style: TextStyle(
-                                                            decoration: TextDecoration.lineThrough,
-                                                            color: Colors.grey,
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 12.0
-                                                        ),),
-                                                      ],
-                                                    ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        Text("Delivery within 2 hours",
-                                                          style: TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              fontSize: 12.0
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            if(snapshot.data.data[index].quantity == 1){
-                                                              alert();
-                                                            }
-                                                            else{
-                                                              Map body = new Map();
-                                                              body['customer_id'] = userId;
-                                                              body['product'] = snapshot.data.data[index].product.sId;
-                                                              body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
-                                                              _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
-                                                              updateCart("minus", index);
-                                                            }
-                                                          },
-                                                          child:
-                                                          Icon(
-                                                            Icons.remove_circle_outline,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          child: StreamBuilder<ApiResponse<UpdateCartModel>>(
-                                                            stream: _cartBloc.cartPageStream,
-                                                            builder:(context, snapshot2) {
-                                                              if(snapshot2.hasData)
-                                                              {
-                                                                switch(snapshot2.data.status)
-                                                                {
-                                                                  case Status.LOADING:
-                                                                    print("Case 1");
-                                                                    print(snapshot2);
-                                                                    return Center(
-                                                                      child: CircularProgressIndicator(
-                                                                        valueColor: new AlwaysStoppedAnimation<Color>(
-                                                                          Color.fromRGBO(255, 241, 232, 1),
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                    break;
-                                                                  case Status.COMPLETED:
-                                                                    reload();
-                                                                    // return Text(
-                                                                    //   snapshot2.data.data.data.quantity.toString(),
-                                                                    //   style: TextStyle(
-                                                                    //       color: Colors.black
-                                                                    //   ),
-                                                                    // );
-                                                                    // cartModel = _cartRepository.getCartById(userId);
-                                                                    // setState(() {
-                                                                    //   cost =0;
-                                                                    // });
-                                                                    return Text(
-                                                                      _quantityController[index].toString(),
-                                                                      style: TextStyle(
-                                                                          color: Colors.black
-                                                                      ),
-                                                                    );
-                                                                    break;
-                                                                  case Status.ERROR:
-                                                                    print("Case 3");
-                                                                    print(snapshot2);
-                                                                    Fluttertoast.showToast(
-                                                                        msg: "Failed",
-                                                                        toastLength: Toast.LENGTH_SHORT,
-                                                                        gravity: ToastGravity.CENTER,
-                                                                        timeInSecForIosWeb: 1,
-                                                                        backgroundColor: Colors.red,
-                                                                        textColor: Colors.white,
-                                                                        fontSize: 16.0
-                                                                    );
-                                                                    return Text(
-                                                                      _quantityController[index].toString(),
-                                                                      style: TextStyle(
-                                                                          color: Colors.black
-                                                                      ),
-                                                                    );
-                                                                    break;
-                                                                }
-                                                              }
-
-                                                              return Text(
-                                                                snapshot.data.data[index].quantity.toString(),
-                                                                style: TextStyle(
-                                                                    color: Colors.black
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            Map body = new Map();
-                                                            body['customer_id'] = userId;
-                                                            body['product'] = snapshot.data.data[index].product.sId;
-                                                            body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
-                                                            _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
-                                                            updateCart("plus", index);
-                                                          },
-                                                          child: Icon(
-                                                            Icons.add_circle_outline,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              });
-                        }
-                      }
-                  )
-                ),
+                returnFutureList(),
                 Divider(),
                 Container(
                   child: Row(

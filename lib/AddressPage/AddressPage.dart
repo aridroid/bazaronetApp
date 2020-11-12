@@ -1,8 +1,10 @@
 import 'package:bazaronet_fresh/AddressPage/AddressBloc.dart';
 import 'package:bazaronet_fresh/AddressPage/AddressModel/SaveAddressModel.dart';
+import 'package:bazaronet_fresh/RazorPayPage/RazorPayPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,6 +28,7 @@ class _AddressPageState extends State<AddressPage> {
   String userId = "";
   String userName = "";
   String email = "";
+  String token = "";
   AddressBloc _addressBloc;
 
   @override
@@ -41,6 +44,7 @@ class _AddressPageState extends State<AddressPage> {
     userId = prefs.getString("userId");
     userName = prefs.getString("userName");
     email = prefs.getString("email");
+    token = prefs.getString("token");
   }
 
   // navToAttachList(context) async {
@@ -499,7 +503,7 @@ class _AddressPageState extends State<AddressPage> {
     print("${first.featureName} : ${first.addressLine}");*/
   }
 
-  alert(BuildContext context) async{
+  alert(BuildContext context){
     Future.delayed(Duration.zero, () async {
       Fluttertoast.showToast(
           msg: "Address added successfully",
@@ -508,6 +512,9 @@ class _AddressPageState extends State<AddressPage> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RazorPayScreen())
+          );
     });
   }
 

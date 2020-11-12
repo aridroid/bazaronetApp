@@ -239,5 +239,6 @@ class _loginpageState extends State<loginpage> {
     prefs.setString('userId', data.sId);
     prefs.setString('userName', data.name);
     prefs.setString('email', data.email);
+    prefs.setString('token', data.token);
   }
 }
