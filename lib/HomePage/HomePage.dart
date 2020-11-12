@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     String stringValue = prefs.getString('userId');
     userId = stringValue;
     print("In getuserId");
-    print("userId "+userId);
   }
 
   ifHasUserId() async {

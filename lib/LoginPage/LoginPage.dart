@@ -154,8 +154,8 @@ class _loginpageState extends State<loginpage> {
                                     );
                                     break;
                                   case Status.COMPLETED:
-                                    saveUserData(snapshot.data.data.sId);
-                                    navigateScreen(context);
+                                    saveUserData(snapshot.data.data);
+                                    navigateScreen(context, snapshot.data.data.name);
                                     break;
                                   case Status.ERROR:
                                     print("Case 3");
@@ -214,10 +214,10 @@ class _loginpageState extends State<loginpage> {
         )
     );
   }
-  navigateScreen(context) async{
+  navigateScreen(BuildContext context, String name) async{
     Future.delayed(Duration.zero, () async {
       Fluttertoast.showToast(
-          msg: "Login Successful",
+          msg: "Welcome "+name,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.greenAccent,
@@ -234,9 +234,10 @@ class _loginpageState extends State<loginpage> {
     });
   }
 
-  saveUserData(String userId) async {
+  saveUserData(LoginModel data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print("Hello "+userId);
-    prefs.setString('userId', userId);
+    prefs.setString('userId', data.sId);
+    prefs.setString('userName', data.name);
+    prefs.setString('email', data.email);
   }
 }

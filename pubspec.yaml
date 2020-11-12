@@ -28,6 +28,8 @@ dependencies:
   email_validator: ^1.0.0
   fluttertoast: ^7.1.1
   shared_preferences: 0.5.12+4
+  geolocator: ^6.1.4
+  geocoder: 0.2.1
 
   flutter:
     sdk: flutter
