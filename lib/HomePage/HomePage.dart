@@ -3,6 +3,8 @@ import 'dart:ffi';
 import 'package:bazaronet_fresh/CartPage/CartPage.dart';
 import 'package:bazaronet_fresh/HomePage/home.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
+import 'package:bazaronet_fresh/OrderPage/OrderPage.dart';
+import 'package:bazaronet_fresh/ProfilePage/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,13 +65,9 @@ class _HomePageState extends State<HomePage> {
 
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
-    Text(
-      'Index 1: My Order',
-    ),
+    OrderDetailsPage(),
     Cart(),
-    Text(
-        'Index 3: Profile'
-    )
+    Profile()
   ];
 
   @override
