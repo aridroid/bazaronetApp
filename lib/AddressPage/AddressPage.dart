@@ -512,7 +512,7 @@ class _AddressPageState extends State<AddressPage> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
-          Navigator.push(context,
+          Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => RazorPayScreen())
           );
     });

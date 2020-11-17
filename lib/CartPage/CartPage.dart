@@ -1,11 +1,12 @@
 import 'package:bazaronet_fresh/AddressPage/AddressPage.dart';
 import 'package:bazaronet_fresh/CartPage/CartBloc.dart';
-import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart';
+import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart' as cartData;
 import 'package:bazaronet_fresh/CartPage/CartPageModel/UpdateCartModel.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageRepository/CartRepository.dart';
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
+import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,8 +26,10 @@ class _cartState extends State<Cart> {
   CartRepository _cartRepository;
   double cost = 0;
   List<int> _quantityController = new List();
-  Future<CartPageModel> cartModel;
+  Future<cartData.CartPageModel> cartModel;
   CartBloc _cartBloc;
+  int discount;
+  Color orangeTheme = Color.fromRGBO(239, 121, 57, 1);
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class _cartState extends State<Cart> {
     _cartBloc = CartBloc();
   }
 
-  addAmount(CartPageModel data, int index) {
+  addAmount(cartData.CartPageModel data, int index) {
     Future.delayed(Duration.zero, () async {
       setState(() {
         cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
@@ -81,9 +84,14 @@ class _cartState extends State<Cart> {
     prefs.remove('userId');
   }
 
+  calculateDiscount(cartData.Data data) {
+    double discount2 = (1 - data.product.actualPrice/data.product.price)*100;
+    discount = discount2.toInt();
+  }
+
   returnFutureList() {
     return Expanded(
-        child: FutureBuilder<CartPageModel>(
+        child: FutureBuilder<cartData.CartPageModel>(
             future: _cartRepository.getCartById(userId),
             builder: (context, snapshot) {
               if(!snapshot.hasData){
@@ -91,7 +99,7 @@ class _cartState extends State<Cart> {
                 return Center(
                     child: CircularProgressIndicator(
                       valueColor: new AlwaysStoppedAnimation<Color>(
-                        Color.fromRGBO(255, 241, 232, 1),
+                        Color.fromRGBO(239, 121, 57, 1),
                       ),
                     )
                 );
@@ -102,6 +110,7 @@ class _cartState extends State<Cart> {
                     itemCount: snapshot.data.data.length,
                     itemBuilder: (context, index) {
                       // addAmount(snapshot.data.data[index].product.actualPrice.roundToDouble());
+                      calculateDiscount(snapshot.data.data[index]);
                       if(cost==0)
                       {
                           addAmount(snapshot.data,index);
@@ -112,11 +121,10 @@ class _cartState extends State<Cart> {
                         child: Container(
                           height: 120.0,
                           margin: EdgeInsets.only(
+                              top: _minimumPadding,
                               bottom: _minimumPadding,
-                              left: _minimumPadding,
-                              right: _minimumPadding),
-                          padding: EdgeInsets.only(
-                          ),
+                              left: _minimumPadding*2,
+                              right: _minimumPadding*2),
                           decoration: BoxDecoration(
                               borderRadius:
                               BorderRadius.all(
@@ -141,7 +149,7 @@ class _cartState extends State<Cart> {
                                       .of(context)
                                       .size
                                       .width *
-                                      0.3,
+                                      0.25,
                                   decoration: BoxDecoration(
                                       borderRadius:
                                       BorderRadius.only(
@@ -157,7 +165,6 @@ class _cartState extends State<Cart> {
                                             'http://139.59.91.150:3333/uploads/'+
                                                 snapshot.data.data[index].product.image[0]),
                                         fit: BoxFit.fill,
-
                                       )),
                                 ),
                                 Expanded(
@@ -166,14 +173,11 @@ class _cartState extends State<Cart> {
                                         top: _minimumPadding *
                                             2,
                                         bottom: _minimumPadding*2,
-                                        left: _minimumPadding,
-                                        right: _minimumPadding
-                                    ),
+                                        left: _minimumPadding),
                                     child: Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
@@ -181,8 +185,7 @@ class _cartState extends State<Cart> {
                                                 snapshot.data.data[index].product.name.length > 19 ?
                                                 '${snapshot.data.data[index].product.name.substring(0,19)}...': snapshot.data.data[index].product.name,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0
+                                                    fontSize: 15.0
                                                 ),
                                               ),
                                               // Spacer(),
@@ -203,21 +206,20 @@ class _cartState extends State<Cart> {
                                             children: [
                                               Icon(
                                                 Icons.star,
-                                                color: Color.fromRGBO(239, 121, 57, 1),
+                                                color: Color.fromRGBO(255, 165, 0, 1),
                                                 size: 15.0,
                                               ),
                                               Text(
-                                                "  4.2",
+                                                " 4.2",
                                                 style: TextStyle(
-                                                    color: Color.fromRGBO(239, 121, 57, 1),
-                                                    fontSize: 12.0,
-                                                    fontStyle: FontStyle.italic),
+                                                    color: Color.fromRGBO(255, 165, 0, 1),
+                                                    fontSize: 12.0),
                                               ),
                                               Text(
                                                 " 125 Reviews",
                                                 style: TextStyle(
                                                     fontSize: 12.0,
-                                                    fontStyle: FontStyle.italic
+                                                    color: Colors.grey
                                                 ),)
                                             ],
                                           ),
@@ -226,23 +228,31 @@ class _cartState extends State<Cart> {
                                             children: [
                                               Text("Rs."+snapshot.data.data[index].product.actualPrice.toString()+" ",
                                                 style: TextStyle(
-                                                    color: Color.fromRGBO(239, 121, 57, 1),
-                                                    fontSize: 15.0,
-                                                    fontWeight: FontWeight.bold),),
+                                                  fontSize: 15.0,),),
                                               Text(" Rs."+snapshot.data.data[index].product.price.toString(), style: TextStyle(
                                                   decoration: TextDecoration.lineThrough,
                                                   color: Colors.grey,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.0
-                                              ),),
+                                                  fontSize: 15.0),),
+                                              Text(" "+discount.toString()+"% OFF", style: TextStyle(
+                                                  color: Color.fromRGBO(255, 165, 0, 1),
+                                                  fontSize: 15.0),
+                                              )
                                             ],
                                           ),
                                           Spacer(),
                                           Row(
                                             children: [
-                                              Text("Delivery within 2 hours",
+                                              Container(
+                                                // padding: EdgeInsets.only(right: _minimumPadding*2),
+                                                child: Icon(
+                                                  Icons.airport_shuttle,
+                                                  size: 20.0,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              Text(" Delivery within 2 hours",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey,
                                                     fontSize: 12.0
                                                 ),
                                               ),
@@ -347,9 +357,12 @@ class _cartState extends State<Cart> {
                                                   _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
                                                   updateCart("plus", index);
                                                 },
-                                                child: Icon(
-                                                  Icons.add_circle_outline,
-                                                  color: Colors.grey,
+                                                child: Container(
+                                                  padding: EdgeInsets.only(right: _minimumPadding),
+                                                  child: Icon(
+                                                    Icons.add_circle_outline,
+                                                    color: Colors.grey,
+                                                  ),
                                                 ),
                                               )
                                             ],
@@ -376,14 +389,14 @@ class _cartState extends State<Cart> {
     if (loading) {
       return CircularProgressIndicator(
         valueColor:
-            new AlwaysStoppedAnimation<Color>(Color.fromRGBO(255, 255, 255, 1)),
+            new AlwaysStoppedAnimation<Color>(Color.fromRGBO(239, 121, 57, 1),),
       );
     }
     if (!CheckValue) {
       navigateScreen();
       return Container(
           decoration: new BoxDecoration(
-              color: Color.fromRGBO(255, 241, 232, 1),
+              color: Colors.white,
               //new Color.fromRGBO(255, 0, 0, 0.0),
               borderRadius: new BorderRadius.only(
                   topLeft: const Radius.circular(15.0),
@@ -392,12 +405,18 @@ class _cartState extends State<Cart> {
           width: MediaQuery.of(context).size.width,
           child: Card(
             clipBehavior: Clip.hardEdge,
-            color: Color.fromRGBO(255, 241, 232, 1),
+            color: Colors.white70,
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                new AlwaysStoppedAnimation<Color>(orangeTheme),
+              ),
+            )
           ));
     } else {
       return Container(
         decoration: new BoxDecoration(
-            color: Color.fromRGBO(255, 241, 232, 1),
+            color: Colors.white,
             //new Color.fromRGBO(255, 0, 0, 0.0),
             borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(15.0),
@@ -406,10 +425,13 @@ class _cartState extends State<Cart> {
         width: MediaQuery.of(context).size.width,
         child: Card(
           clipBehavior: Clip.hardEdge,
-          color: Color.fromRGBO(255, 241, 232, 1),
+          color: Colors.white70,
           child: Expanded(
             child: Column(
               children: [
+                SizedBox(
+                  height: 5,
+                ),
                 returnFutureList(),
                 Divider(),
                 Container(
@@ -498,7 +520,7 @@ class _cartState extends State<Cart> {
   navigateScreen() {
     Future.delayed(Duration.zero, () async {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => loginpage(data: null)));
+          MaterialPageRoute(builder: (context) => NewLoginPage(data: null)));
     });
   }
 

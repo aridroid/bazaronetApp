@@ -157,6 +157,8 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+    _showResponse("Success");
+
   }
 
   void _handlePaymentError(PaymentFailureResponse response) async {
@@ -175,8 +177,9 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
     print("ERROR: " + response.code.toString() + " - " + response.message);
     prefs.setString("cart_id","");
     print("cart id at payment success 2 == ${prefs.getString("cart_id")}");
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomePage()));
+    // Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => HomePage()));
+    _showResponse("Failed");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -184,5 +187,74 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
     // Navigator.of(context)
     //     .push(MaterialPageRoute(builder: (context) => IndexPage()));
+  }
+
+  Future<void> _showResponse(String status) async {
+    if(status == 'Success'){
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Payment SuccessFul', style: TextStyle(
+                color: Colors.greenAccent
+            ),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Go to Home Page'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Go Back', style: TextStyle(
+                  color: Colors.greenAccent
+                ),),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(
+                      builder: (context) => HomePage()));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Payment Failed',
+              style: TextStyle(
+                  color: Colors.redAccent
+              ),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Go to Home Page'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Go Back', style: TextStyle(
+                    color: Colors.redAccent
+                ),),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(
+                      builder: (context) => HomePage()));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
   }
 }

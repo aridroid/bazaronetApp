@@ -1,4 +1,5 @@
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
+import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,11 +48,10 @@ class _ProfileState extends State<Profile> {
     prefs.remove("token");
     navigateScreen();
   }
-
   navigateScreen() {
     Future.delayed(Duration.zero, () async {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => loginpage(data: null)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => NewLoginPage(data: null)));
     });
   }
 

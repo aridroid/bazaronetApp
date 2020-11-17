@@ -69,6 +69,15 @@ flutter:
     - images/coupon3.png
     - images/diapers.jpg
     - images/user.jpg
+    - images/coffeemaker.jpg
+    - images/bottle.jpg
+    - images/cleaning.png
+    - images/electrical.png
+    - images/sink.png
+    - images/bg.png
+    - images/facebook.png
+    - images/google.png
+    - images/twitter.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

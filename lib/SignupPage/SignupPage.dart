@@ -45,9 +45,10 @@ class _SignupPageState extends State<SignupPage> {
               child: ListView(
                   children: [
                     Container(
+                      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*.07),
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(top: _minimumPadding*8, bottom: _minimumPadding*8),
-                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(top: _minimumPadding*8, bottom: _minimumPadding*1),
+                      alignment: Alignment.topLeft,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius:  BorderRadius.only(
@@ -58,12 +59,16 @@ class _SignupPageState extends State<SignupPage> {
                           )
                       ),
                       child:
-                      Text("Sign Up",
+                      Text("Getting Started",
                         style: TextStyle(
-                            color: Color.fromRGBO(239, 121, 57, 1),
-                            fontSize: 35,fontWeight: FontWeight.bold
+                          color: Colors.black,
+                          fontSize: 25,
                         ),
                       ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*.07,bottom: MediaQuery.of(context).size.height*.05),
+                      child: Text("Create account to continue",style: TextStyle(color: Colors.grey),),
                     ),
                     Theme(
                       data: new ThemeData(
@@ -72,8 +77,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       child: Container(
                           margin: EdgeInsets.only(
-                              left: _minimumPadding*3,
-                              right: _minimumPadding*3
+                              left: _minimumPadding*5,
+                              right: _minimumPadding*5
                           ),
                           child: TextFormField(
                             validator: (value) {
@@ -84,8 +89,10 @@ class _SignupPageState extends State<SignupPage> {
                             },
                             controller: nameController,
                             decoration: InputDecoration(
-                              hintText: 'Enter your name',
+                              prefixIcon: Icon(Icons.person_outline,color: Colors.grey,),
+                              hintText: 'Full Name',
                               border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
                               ),
                             ),
@@ -98,16 +105,18 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       child: Container(
                           margin: EdgeInsets.only(
-                              left: _minimumPadding*3,
-                              right: _minimumPadding*3,
+                              left: _minimumPadding*5,
+                              right: _minimumPadding*5,
                               top: _minimumPadding*4
                           ),
                           child: TextFormField(
                             controller: emailController,
                             validator: (email)=>EmailValidator.validate(email)? null:"Invalid email address",
                             decoration: InputDecoration(
-                              hintText: 'Enter Email',
+                              prefixIcon: Icon(Icons.email,color: Colors.grey,),
+                              hintText: 'Email',
                               border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
                               ),
                             ),
@@ -118,7 +127,7 @@ class _SignupPageState extends State<SignupPage> {
                         primaryColor:Color.fromRGBO(239, 121, 57, 1),
                         primaryColorDark: Color.fromRGBO(239, 121, 57, 1),),
                       child: Container(
-                          margin: EdgeInsets.only(left: _minimumPadding*3, right: _minimumPadding*3, top: _minimumPadding*4),
+                          margin: EdgeInsets.only(left: _minimumPadding*5, right: _minimumPadding*5, top: _minimumPadding*4),
                           child: TextFormField(
                             controller: mobileController,
                             keyboardType: TextInputType.number,
@@ -129,8 +138,10 @@ class _SignupPageState extends State<SignupPage> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: 'Enter Mobile No.',
+                              prefixIcon: Icon(Icons.call_rounded,color: Colors.grey,),
+                              hintText: 'Mobile Number',
                               border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
                               ),
                             ),
@@ -142,12 +153,12 @@ class _SignupPageState extends State<SignupPage> {
                         primaryColorDark: Color.fromRGBO(239, 121, 57, 1),
                       ),
                       child: Container(
-                          margin: EdgeInsets.only(left: _minimumPadding*3,
-                              right: _minimumPadding*3,
+                          margin: EdgeInsets.only(left: _minimumPadding*5,
+                              right: _minimumPadding*5,
                               top: _minimumPadding*4),
                           child: TextFormField(
                             controller: passwordController,
-                              obscureText: true,
+                            obscureText: true,
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Password field must contain a value';
@@ -155,107 +166,147 @@ class _SignupPageState extends State<SignupPage> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              hintText: 'Enter Password',
+                              prefixIcon: Icon(Icons.lock_outline,color: Colors.grey,),
+                              hintText: 'Password',
                               border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide:  BorderSide(color:  Color.fromRGBO(239, 121, 57, 1),),
                               ),
                             ),
                           )),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: _minimumPadding*6,
-                      ),
-                      // alignment: Alignment.center,
-                      child:  ButtonTheme(
-                        height: 50.0,
-                        minWidth: 150.0,
-                        child:
-                        RaisedButton(
-                          color: Color.fromRGBO(239, 121, 57, 1),
-                          onPressed: () {
-                            if(_formKey.currentState.validate()){
-                              Map body = new Map();
-                              body['email']=emailController.text;
-                              body['phone']=mobileController.text;
-                              body['name']=nameController.text;
-                              body['password']=passwordController.text;
-                              body['role']="USER";
-                              _formKey.currentState.reset();
-                              _signupBloc.signUp(body);
-                            }
-                          },
-                          child: StreamBuilder<ApiResponse<SignUpModel>>(
-                            stream: _signupBloc.signUpStream,
-                            builder:(context, snapshot) {
-                              if(snapshot.hasData)
-                              {
-                                switch(snapshot.data.status)
-                                {
-                                  case Status.LOADING:
-                                    print("Case 1");
-                                    print(snapshot);
-                                   return CircularProgressIndicator(
-                                      valueColor: new AlwaysStoppedAnimation<Color>(
-                                        Color.fromRGBO(255, 241, 232, 1),
-                                      ),
-                                    );
-                                    break;
-                                  case Status.COMPLETED:
-                                    print("Case 2:"+snapshot.data.data.sId);
-                                    navigateScreen(context);
-                                    break;
-                                  case Status.ERROR:
-                                    print("Case 3");
-                                    Fluttertoast.showToast(
-                                        msg: "Email address and phone number must be unique",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.red,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0
-                                    );
-                                    return Text("Sign Up", style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: Colors.white
-                                    ));
-                                    break;
-                                }
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: _minimumPadding*10,
+                        ),
+                        // alignment: Alignment.center,
+                        child:  ButtonTheme(
+                          height: 50.0,
+                          minWidth: MediaQuery.of(context).size.width*.87,
+                          child:
+                          RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            color: Color.fromRGBO(239, 121, 57, 1),
+                            onPressed: () {
+                              if(_formKey.currentState.validate()){
+                                Map body = new Map();
+                                body['email']=emailController.text;
+                                body['phone']=mobileController.text;
+                                body['name']=nameController.text;
+                                body['password']=passwordController.text;
+                                body['role']="USER";
+                                _formKey.currentState.reset();
+                                _signupBloc.signUp(body);
                               }
+                            },
+                            child: StreamBuilder<ApiResponse<SignUpModel>>(
+                              stream: _signupBloc.signUpStream,
+                              builder:(context, snapshot) {
+                                if(snapshot.hasData)
+                                {
+                                  switch(snapshot.data.status)
+                                  {
+                                    case Status.LOADING:
+                                      print("Case 1");
+                                      print(snapshot);
+                                      return CircularProgressIndicator(
+                                        valueColor: new AlwaysStoppedAnimation<Color>(
+                                          Color.fromRGBO(255, 241, 232, 1),
+                                        ),
+                                      );
+                                      break;
+                                    case Status.COMPLETED:
+                                      print("Case 2:"+snapshot.data.data.sId);
+                                      navigateScreen(context);
+                                      break;
+                                    case Status.ERROR:
+                                      print("Case 3");
+                                      Fluttertoast.showToast(
+                                          msg: "Email address and phone number must be unique",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0
+                                      );
+                                      return Text("Sign Up", style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: Colors.white
+                                      ));
+                                      break;
+                                  }
+                                }
 
                                 return Text("Sign Up", style: TextStyle(
                                     fontSize: 15.0,
                                     color: Colors.white
                                 ));
 
-                            },
+                              },
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: _minimumPadding*4,
-                      ),
-                      // alignment: Alignment.center,
-                      child: ButtonTheme(
-                        height: 50.0,
-                        minWidth: 150.0,
-                        child: RaisedButton(
-                          color: Color.fromRGBO(239, 121, 57, 1),
-                          onPressed: () {
-                            Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (context) => loginpage(data: widget.data)));
-                          },
-                          child: Text("Already have an account", style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.white
-                          ),),
+                    Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height*.1,
+                        width: MediaQuery.of(context).size.width*.87,
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/twitter.png"),
+                                  )
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("images/google.png")
+                                  )
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("images/facebook.png")
+                                  )
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    )
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(
+                            builder: (context) => loginpage(data: widget.data)));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: _minimumPadding*4,
+                          bottom: _minimumPadding*4
+                        ),
+                        // alignment: Alignment.center,
+                        child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Already have an account?",style: TextStyle(color: Colors.black,fontSize: 16),),
+                                Text("Login",style: TextStyle(color: Color.fromRGBO(239, 121, 57, 1),fontSize: 16),),
+                              ],
+                            )),
+                      ),
+                    ),
                   ]
               ),
             )
@@ -273,7 +324,7 @@ class _SignupPageState extends State<SignupPage> {
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
       Navigator.pushReplacement(context, MaterialPageRoute(builder:
-      (context) => loginpage(data: widget.data,)));
+          (context) => loginpage(data: widget.data,)));
     });
   }
 

@@ -4,6 +4,7 @@ import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailBloc.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart' as productData;
 import 'package:bazaronet_fresh/helper/api_response.dart';
+import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +29,20 @@ class _productdetailsState extends State<productdetails> {
   ProductDetailBloc _productDetailBloc;
   List<String> size=["XS","S","M","L","XL","XXL"];
   List<String> quantity=["10P","20P","30P","40P","50P","60P"];
-
+  int discount = 0;
 
   @override
   void initState() {
+    calculateDiscount();
     getuserId();
     print("Hello 2");
     ifHasUserId();
     _productDetailBloc = ProductDetailBloc();
+  }
+
+  calculateDiscount() {
+    double discount2 = (1 - widget.data.actualPrice/ widget.data.price)*100;
+    discount = discount2.toInt();
   }
 
   getuserId() async {
@@ -105,12 +112,12 @@ class _productdetailsState extends State<productdetails> {
                           children: [
                             Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.only(top: _minimumPadding, left: _minimumPadding),
+                                  padding: EdgeInsets.only(top: _minimumPadding, left: _minimumPadding*2),
                                   child: Text(
                                     widget.data.name,style:
                                   TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.bold
+                                      fontSize: 18.0,
                                   ),
                                   ),
                                 )
@@ -140,14 +147,29 @@ class _productdetailsState extends State<productdetails> {
                         children: [
                           Padding(
                             padding:  EdgeInsets.only(left: 10),
-                            child: Text("Rs. "+widget.data.actualPrice.toString(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                            child: Text(
+                              "Rs."+widget.data.actualPrice.toString(),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                ),
+                            ),
                           ),
                           Padding(
-                            padding:  EdgeInsets.only(left:10.0,right: 10.0),
-                            child: Text(widget.data.price.toString(),style: TextStyle(
+                            padding: EdgeInsets.only(left:10.0),
+                            child: Text("Rs."+widget.data.price.toString(),style: TextStyle(
                                 color: Colors.grey,
-                                decoration: TextDecoration.lineThrough
-                            ),),
+                                decoration: TextDecoration.lineThrough,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left:10.0),
+                            child: Text(discount.toString()+"%OFF", style: TextStyle(
+                                color: Color.fromRGBO(255, 165, 0, 1),
+                                fontSize: 20.0),
+                            )
                           ),
                         ],
                       ),
@@ -409,7 +431,13 @@ class _productdetailsState extends State<productdetails> {
                             padding:  EdgeInsets.only(left:10.0,right: 10.0),
                             child: Icon(Icons.airport_shuttle,color: Colors.yellow[700],),
                           ),
-                          Text("Eligible For Fast Delivery In 1 Day",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          Text(
+                            "Eligible For Fast Delivery In 1 Day",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12.0
+                            ),
+                          )
                         ],
                       ),
                       SizedBox(height: 20,),
@@ -428,9 +456,13 @@ class _productdetailsState extends State<productdetails> {
                               },
                             elevation: 0.0,
                             color: Colors.white,
-                            child: Text(isOpen ? "Collapse" : "All Details",
+                            child: !isOpen ? Text("All Details",
                               style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                            ) : Icon(
+                                Icons.arrow_drop_up,
+                                size: 30.0,
                             ),
+
                           ),
                         ],
                       ),
@@ -472,14 +504,11 @@ class _productdetailsState extends State<productdetails> {
                     ],
                   ),
                   ),),
-                  Container(
-                    height: 50.0,
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.only(top: _minimumPadding*2),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(239, 121, 57, 1),
-                    ),
+                  ButtonTheme(
+                    height: 50,
+                    minWidth: MediaQuery.of(context).size.width,
                     child: FlatButton(
+                      color: Color.fromRGBO(239, 121, 57, 1),
                       onPressed: () {
                         if(CheckValue){
                           Map body = new Map();
@@ -490,7 +519,7 @@ class _productdetailsState extends State<productdetails> {
                         }
                         else {
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => loginpage(data: widget.data,))
+                              builder: (context) => NewLoginPage(data: widget.data,))
                           );
                         }
                       },
@@ -558,7 +587,7 @@ class _productdetailsState extends State<productdetails> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
-          Navigator.push(context, MaterialPageRoute(
+          Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) => HomePage.second(selectedIndex: 2))
           );
     });
