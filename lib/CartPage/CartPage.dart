@@ -25,6 +25,7 @@ class _cartState extends State<Cart> {
   bool loading = true;
   CartRepository _cartRepository;
   double cost = 0;
+  int selectedItem;
   List<int> _quantityController = new List();
   Future<cartData.CartPageModel> cartModel;
   CartBloc _cartBloc;
@@ -40,10 +41,11 @@ class _cartState extends State<Cart> {
 
   addAmount(cartData.CartPageModel data, int index) {
     Future.delayed(Duration.zero, () async {
+      cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
+      print("Cost: "+cost.toString());
+      checkOutButtonState = true;
       setState(() {
-        cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
-        print("Cost: "+cost.toString());
-        checkOutButtonState = true;
+
       });
     });
   }
@@ -68,15 +70,14 @@ class _cartState extends State<Cart> {
 
   updateCart(String operation, int index) {
       if (operation == "minus") {
-        setState(() {
           _quantityController[index]--;
-        });
       }
       else if (operation == "plus") {
-        setState(() {
           _quantityController[index]++;
-        });
       }
+      setState(() {
+
+      });
   }
 
   removeValue() async {
@@ -109,7 +110,6 @@ class _cartState extends State<Cart> {
                 return ListView.builder(
                     itemCount: snapshot.data.data.length,
                     itemBuilder: (context, index) {
-                      // addAmount(snapshot.data.data[index].product.actualPrice.roundToDouble());
                       calculateDiscount(snapshot.data.data[index]);
                       if(cost==0)
                       {
@@ -267,6 +267,7 @@ class _cartState extends State<Cart> {
                                                     body['customer_id'] = userId;
                                                     body['product'] = snapshot.data.data[index].product.sId;
                                                     body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
+                                                    selectedItem = index;
                                                     _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
                                                     updateCart("minus", index);
                                                   }
@@ -289,26 +290,20 @@ class _cartState extends State<Cart> {
                                                         case Status.LOADING:
                                                           print("Case 1");
                                                           print(snapshot2);
-                                                          return Center(
-                                                            child: CircularProgressIndicator(
-                                                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                                                Color.fromRGBO(255, 241, 232, 1),
+                                                          if(index == selectedItem){
+                                                            return Center(
+                                                              child: CircularProgressIndicator(
+                                                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                                                  Color.fromRGBO(255, 241, 232, 1),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
+                                                            );
+                                                          }
                                                           break;
                                                         case Status.COMPLETED:
-                                                          reload();
-                                                          // return Text(
-                                                          //   snapshot2.data.data.data.quantity.toString(),
-                                                          //   style: TextStyle(
-                                                          //       color: Colors.black
-                                                          //   ),
-                                                          // );
-                                                          // cartModel = _cartRepository.getCartById(userId);
-                                                          // setState(() {
-                                                          //   cost =0;
-                                                          // });
+                                                          if(index == selectedItem){
+                                                            reload(selectedItem);
+                                                          }
                                                           return Text(
                                                             _quantityController[index].toString(),
                                                             style: TextStyle(
@@ -354,6 +349,7 @@ class _cartState extends State<Cart> {
                                                   body['customer_id'] = userId;
                                                   body['product'] = snapshot.data.data[index].product.sId;
                                                   body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
+                                                  selectedItem = index;
                                                   _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
                                                   updateCart("plus", index);
                                                 },
@@ -495,8 +491,10 @@ class _cartState extends State<Cart> {
     }
   }
 
-  reload() {
+  reload(int index) {
     Future.delayed(Duration.zero, () async {
+      selectedItem = -1;
+      print("Reload Index:"+index.toString());
       Navigator.pushReplacement(context,
           MaterialPageRoute(
               builder: (context) => HomePage.second(selectedIndex: 2,)

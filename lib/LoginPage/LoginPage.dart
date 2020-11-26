@@ -169,6 +169,7 @@ class _loginpageState extends State<loginpage> {
                                       );
                                       break;
                                     case Status.COMPLETED:
+                                      print("Case 2");
                                       saveUserData(snapshot.data.data);
                                       navigateScreen(context, snapshot.data.data.name);
                                       break;
