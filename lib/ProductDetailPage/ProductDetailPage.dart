@@ -57,99 +57,99 @@ class _productdetailsState extends State<productdetails> {
     // createProperties();
     product["customer_id"] = userId;
     product['quantity'] = 1.toString();
-    // product["product"] = new sendProduct.Product(
-    //     tax: widget.data.tax,
-    //     image: widget.data.image,
-    //     shipping: widget.data.shipping,
-    //     minAmountForFreeShipping: widget.data.minAmountForFreeShipping,
-    //     status: widget.data.status,
-    //     delivery: widget.data.delivery,
-    //     sId: widget.data.sId,
-    //     name: widget.data.name,
-    //     model: widget.data.model,
-    //     category: new sendProduct.Category(
-    //         sId: widget.data.category.sId,
-    //         image: widget.data.category.image,
-    //         dateAdded: widget.data.category.dateAdded,
-    //         dateModified: widget.data.category.dateModified,
-    //         description: widget.data.category.description,
-    //         iV: widget.data.category.iV,
-    //         name: widget.data.category.name,
-    //         sortOrder: widget.data.category.sortOrder,
-    //         status: widget.data.category.status),
-    //     subcategory: widget.data.subcategory,
-    //     manufacturer: widget.data.manufacturer,
-    //     unit: 1,
-    //     quantity: widget.data.quantity,
-    //     quantityClass: "",
-    //     description: widget.data.description,
-    //     variant: new sendProduct.Variant(
-    //         sId: widget.data.variant[selectedVariant].sId,
-    //         actualPrice: widget.data.variant[selectedVariant].actualPrice,
-    //         price: widget.data.variant[selectedVariant].price,
-    //         stock: widget.data.variant[selectedVariant].stock,
-    //         variantProperties:
-    //             widget.data.variant[selectedVariant].variantProperties),
-    //     dateAdded: widget.data.dateAdded,
-    //     dateModified: widget.data.dateModified,
-    //     iV: widget.data.iV,
-    //     selectedVariant: new sendProduct.Variant(
-    //         sId: widget.data.variant[selectedVariant].sId,
-    //         actualPrice: widget.data.variant[selectedVariant].actualPrice,
-    //         price: widget.data.variant[selectedVariant].price,
-    //         stock: widget.data.variant[selectedVariant].stock,
-    //         variantProperties:
-    //             widget.data.variant[selectedVariant].variantProperties));
+    product["product"] = new sendProduct.Product(
+        tax: widget.data.tax,
+        image: widget.data.image,
+        shipping: widget.data.shipping,
+        minAmountForFreeShipping: widget.data.minAmountForFreeShipping,
+        status: widget.data.status,
+        delivery: widget.data.delivery,
+        sId: widget.data.sId,
+        name: widget.data.name,
+        model: widget.data.model,
+        category: new sendProduct.Category(
+            sId: widget.data.category.sId,
+            image: widget.data.category.image,
+            dateAdded: widget.data.category.dateAdded,
+            dateModified: widget.data.category.dateModified,
+            description: widget.data.category.description,
+            iV: widget.data.category.iV,
+            name: widget.data.category.name,
+            sortOrder: widget.data.category.sortOrder,
+            status: widget.data.category.status),
+        subcategory: widget.data.subcategory,
+        manufacturer: widget.data.manufacturer,
+        unit: 1,
+        quantity: widget.data.quantity,
+        quantityClass: "",
+        description: widget.data.description,
+        variant: new sendProduct.Variant(
+            sId: widget.data.variant[selectedVariant].sId,
+            actualPrice: widget.data.variant[selectedVariant].actualPrice,
+            price: widget.data.variant[selectedVariant].price,
+            stock: widget.data.variant[selectedVariant].stock,
+            variantProperties:
+                widget.data.variant[selectedVariant].variantProperties),
+        dateAdded: widget.data.dateAdded,
+        dateModified: widget.data.dateModified,
+        iV: widget.data.iV,
+        selectedVariant: new sendProduct.Variant(
+            sId: widget.data.variant[selectedVariant].sId,
+            actualPrice: widget.data.variant[selectedVariant].actualPrice,
+            price: widget.data.variant[selectedVariant].price,
+            stock: widget.data.variant[selectedVariant].stock,
+            variantProperties:
+                widget.data.variant[selectedVariant].variantProperties));
 
-    product["product"] = {
-      "tax": widget.data.tax,
-      "image": widget.data.image,
-      "shipping": widget.data.shipping,
-      "minAmountForFreeShipping": widget.data.minAmountForFreeShipping,
-      "status": widget.data.status,
-      "delivery": widget.data.delivery,
-      "sId": widget.data.sId,
-      "name": widget.data.name,
-      "model": widget.data.model,
-      "category": {
-        "sId": widget.data.category.sId,
-        "image": widget.data.category.image,
-        "dateAdded": widget.data.category.dateAdded,
-        "dateModified": widget.data.category.dateModified,
-        "description": widget.data.category.description,
-        "iV": widget.data.category.iV,
-        "name": widget.data.category.name,
-        "sortOrder": widget.data.category.sortOrder,
-        "status": widget.data.category.status
-      },
-      "subcategory": widget.data.subcategory,
-      "manufacturer": widget.data.manufacturer,
-      "unit": 1,
-      "quantity": widget.data.quantity,
-      "quantityClass": "",
-      "description": widget.data.description,
-      "variant": {
-        "sId": widget.data.variant[selectedVariant].sId,
-        "actualPrice": widget.data.variant[selectedVariant].actualPrice,
-        "price": widget.data.variant[selectedVariant].price,
-        "stock": widget.data.variant[selectedVariant].stock,
-        "variantProperties":
-            widget.data.variant[selectedVariant].variantProperties
-      },
-      "dateAdded": widget.data.dateAdded,
-      "dateModified": widget.data.dateModified,
-      "iV": widget.data.iV,
-      "selectedVariant": {
-        "sId": widget.data.variant[selectedVariant].sId,
-        "actualPrice": widget.data.variant[selectedVariant].actualPrice,
-        "price": widget.data.variant[selectedVariant].price,
-        "stock": widget.data.variant[selectedVariant].stock,
-        "variantProperties":
-            widget.data.variant[selectedVariant].variantProperties
-      }
-    };
+    // product["product"] = {
+    //   "tax": widget.data.tax,
+    //   "image": widget.data.image,
+    //   "shipping": widget.data.shipping,
+    //   "minAmountForFreeShipping": widget.data.minAmountForFreeShipping,
+    //   "status": widget.data.status,
+    //   "delivery": widget.data.delivery,
+    //   "sId": widget.data.sId,
+    //   "name": widget.data.name,
+    //   "model": widget.data.model,
+    //   "category": {
+    //     "sId": widget.data.category.sId,
+    //     "image": widget.data.category.image,
+    //     "dateAdded": widget.data.category.dateAdded,
+    //     "dateModified": widget.data.category.dateModified,
+    //     "description": widget.data.category.description,
+    //     "iV": widget.data.category.iV,
+    //     "name": widget.data.category.name,
+    //     "sortOrder": widget.data.category.sortOrder,
+    //     "status": widget.data.category.status
+    //   },
+    //   "subcategory": widget.data.subcategory,
+    //   "manufacturer": widget.data.manufacturer,
+    //   "unit": 1,
+    //   "quantity": widget.data.quantity,
+    //   "quantityClass": "",
+    //   "description": widget.data.description,
+    //   "variant": {
+    //     "sId": widget.data.variant[selectedVariant].sId,
+    //     "actualPrice": widget.data.variant[selectedVariant].actualPrice,
+    //     "price": widget.data.variant[selectedVariant].price,
+    //     "stock": widget.data.variant[selectedVariant].stock,
+    //     "variantProperties":
+    //         widget.data.variant[selectedVariant].variantProperties
+    //   },
+    //   "dateAdded": widget.data.dateAdded,
+    //   "dateModified": widget.data.dateModified,
+    //   "iV": widget.data.iV,
+    //   "selectedVariant": {
+    //     "sId": widget.data.variant[selectedVariant].sId,
+    //     "actualPrice": widget.data.variant[selectedVariant].actualPrice,
+    //     "price": widget.data.variant[selectedVariant].price,
+    //     "stock": widget.data.variant[selectedVariant].stock,
+    //     "variantProperties":
+    //         widget.data.variant[selectedVariant].variantProperties
+    //   }
+    // };
 
-    // log("Product2:"+jsonEncode(product));
+    log("Product2:"+jsonEncode(product));
   }
 
   calculateDiscount() {

@@ -3,7 +3,6 @@ import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/Repository/AddToCartRepository.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
 
-
 class ProductDetailBloc {
   AddToCartRepository _addToCartRepository;
 
@@ -16,9 +15,9 @@ class ProductDetailBloc {
       _productDetailPageController.stream;
 
   ProductDetailBloc() {
-    _productDetailPageController = StreamController<ApiResponse<AddToCartModel>>.broadcast();
+    _productDetailPageController =
+        StreamController<ApiResponse<AddToCartModel>>.broadcast();
     _addToCartRepository = AddToCartRepository();
-
   }
 
   addToCart(Map body) async {
@@ -26,11 +25,13 @@ class ProductDetailBloc {
     productDetailPageSink.add(ApiResponse.loading('Submitting'));
     try {
       print("In Try");
-      AddToCartModel addToCartModel = await _addToCartRepository.addToCart(body);
+      AddToCartModel addToCartModel =
+          await _addToCartRepository.addToCart(body);
       productDetailPageSink.add(ApiResponse.completed(addToCartModel));
     } catch (e) {
       print("In Catch");
       productDetailPageSink.add(ApiResponse.error(e.toString()));
+      print("Hello" + e.toString());
       print(e);
     }
   }

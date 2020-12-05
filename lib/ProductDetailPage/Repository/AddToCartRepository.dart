@@ -8,7 +8,7 @@ class AddToCartRepository {
 
   Future<AddToCartModel> addToCart(Map body) async {
     print("In Repo");
-    final response = await _helper.post('api/cart',body);
+    final response = await _helper.postD('api/cart',body);
     print("response of add cart $response");
     return AddToCartModel.fromJson(response);
   }

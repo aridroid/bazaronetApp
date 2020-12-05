@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -25,11 +27,12 @@ class ApiBaseHelper {
 
   Future<dynamic> getWithHeader(String url, String token) async {
     //print('Api Post, url $_baseUrl+url');
-    print(_baseUrl+url);
+    print(_baseUrl + url);
     print('Api token, token $token');
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,headers: {"token": token});
+      final response =
+          await http.get(_baseUrl + url, headers: {"token": token});
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');
@@ -55,14 +58,64 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> postWithHeader(String url, Map body,String token) async {
+  Future<dynamic> postD(String url, Map map) async {
+    log("Product3:"+jsonEncode(map));
+    log(map.toString());
+    print("incep");
+
+
+    print("bhul");
+    var body = json.encode(map);
+
+    var response = await http.post(_baseUrl + url,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+   var  responseJson = _returnResponse(response);
+    print("kano");
+    print("${response.statusCode}");
+    print("${response.body}");
+    return responseJson;
+    ///////////////////
+
+  /*  print('Api Post, url $url');
+
+
+
+  // log(jsonEncode(body));
+    var body = jsonEncode(map);
+    AddToCartModel responseJson;
+    try {
+      print("ari");
+      Response response = await http.post(_baseUrl + url, headers: {
+        "Accept": "Content-Type application/json",
+      }, body: body);
+
+      print("samiran");
+      print(response.body.toString());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      print('No net');
+      throw FetchDataException('No Internet connection');
+    }
+    print('api post.');
+    return responseJson*/;
+  }
+
+  Future<dynamic> postWithHeader(String url, Map body, String token) async {
     //print('Api Post, url $_baseUrl+url');
-    print(_baseUrl+url);
+    print(_baseUrl + url);
     log(jsonEncode(body));
     print(token);
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url, body: jsonEncode(body),headers: {"Authorization": token,"Content-Type": "application/json"});
+      final response = await http.post(_baseUrl + url,
+          body: jsonEncode(body),
+          headers: {
+            "Authorization": token,
+            "Content-Type": "application/json"
+          });
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');
@@ -108,7 +161,7 @@ dynamic _returnResponse(http.Response response) {
     case 200:
       print(response.body.toString());
       var responseJson = json.decode(response.body.toString());
-     // print(responseJson);
+      // print(responseJson);
       return responseJson;
     case 201:
       print(response.body.toString());
