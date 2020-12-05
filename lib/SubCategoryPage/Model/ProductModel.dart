@@ -25,68 +25,52 @@ class ProductModel {
 }
 
 class Data {
-  Dimensions dimensions;
   int tax;
   List<String> image;
   int shipping;
   int minAmountForFreeShipping;
   bool status;
+  String delivery;
   String sId;
   String name;
   String model;
   Category category;
   String subcategory;
   String manufacturer;
-  int price;
-  int actualPrice;
-  int stock;
-  int unit;
   int quantity;
-  String quantityClass;
-  String dimensionsClass;
-  int weight;
-  String weightClass;
   String description;
+  List<Variant> variant;
   String dateAdded;
   String dateModified;
   int iV;
 
   Data(
-      {this.dimensions,
-        this.tax,
+      {this.tax,
         this.image,
         this.shipping,
         this.minAmountForFreeShipping,
         this.status,
+        this.delivery,
         this.sId,
         this.name,
         this.model,
         this.category,
         this.subcategory,
         this.manufacturer,
-        this.price,
-        this.actualPrice,
-        this.stock,
-        this.unit,
         this.quantity,
-        this.quantityClass,
-        this.dimensionsClass,
-        this.weight,
-        this.weightClass,
         this.description,
+        this.variant,
         this.dateAdded,
         this.dateModified,
         this.iV});
 
   Data.fromJson(Map<String, dynamic> json) {
-    dimensions = json['dimensions'] != null
-        ? new Dimensions.fromJson(json['dimensions'])
-        : null;
     tax = json['tax'];
     image = json['image'].cast<String>();
     shipping = json['shipping'];
     minAmountForFreeShipping = json['min_amount_for_free_shipping'];
     status = json['status'];
+    delivery = json['delivery'];
     sId = json['_id'];
     name = json['name'];
     model = json['model'];
@@ -95,16 +79,14 @@ class Data {
         : null;
     subcategory = json['subcategory'];
     manufacturer = json['manufacturer'];
-    price = json['price'];
-    actualPrice = json['actual_price'];
-    stock = json['stock'];
-    unit = json['unit'];
     quantity = json['quantity'];
-    quantityClass = json['quantity_class'];
-    dimensionsClass = json['dimensions_class'];
-    weight = json['weight'];
-    weightClass = json['weight_class'];
     description = json['description'];
+    if (json['variant'] != null) {
+      variant = new List<Variant>();
+      json['variant'].forEach((v) {
+        variant.add(new Variant.fromJson(v));
+      });
+    }
     dateAdded = json['date_added'];
     dateModified = json['date_modified'];
     iV = json['__v'];
@@ -112,14 +94,12 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.dimensions != null) {
-      data['dimensions'] = this.dimensions.toJson();
-    }
     data['tax'] = this.tax;
     data['image'] = this.image;
     data['shipping'] = this.shipping;
     data['min_amount_for_free_shipping'] = this.minAmountForFreeShipping;
     data['status'] = this.status;
+    data['delivery'] = this.delivery;
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['model'] = this.model;
@@ -128,41 +108,14 @@ class Data {
     }
     data['subcategory'] = this.subcategory;
     data['manufacturer'] = this.manufacturer;
-    data['price'] = this.price;
-    data['actual_price'] = this.actualPrice;
-    data['stock'] = this.stock;
-    data['unit'] = this.unit;
     data['quantity'] = this.quantity;
-    data['quantity_class'] = this.quantityClass;
-    data['dimensions_class'] = this.dimensionsClass;
-    data['weight'] = this.weight;
-    data['weight_class'] = this.weightClass;
     data['description'] = this.description;
+    if (this.variant != null) {
+      data['variant'] = this.variant.map((v) => v.toJson()).toList();
+    }
     data['date_added'] = this.dateAdded;
     data['date_modified'] = this.dateModified;
     data['__v'] = this.iV;
-    return data;
-  }
-}
-
-class Dimensions {
-  double length;
-  double width;
-  int height;
-
-  Dimensions({this.length, this.width, this.height});
-
-  Dimensions.fromJson(Map<String, dynamic> json) {
-    length = json['length'];
-    width = json['width'];
-    height = json['height'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['length'] = this.length;
-    data['width'] = this.width;
-    data['height'] = this.height;
     return data;
   }
 }
@@ -212,6 +165,73 @@ class Category {
     data['date_added'] = this.dateAdded;
     data['date_modified'] = this.dateModified;
     data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Variant {
+  List<VariantProperties> variantProperties;
+  String sId;
+  int price;
+  int actualPrice;
+  int stock;
+
+  Variant(
+      {this.variantProperties,
+        this.sId,
+        this.price,
+        this.actualPrice,
+        this.stock});
+
+  Variant.fromJson(Map<String, dynamic> json) {
+    if (json['variant_properties'] != null) {
+      variantProperties = new List<VariantProperties>();
+      json['variant_properties'].forEach((v) {
+        variantProperties.add(new VariantProperties.fromJson(v));
+      });
+    }
+    sId = json['_id'];
+    price = json['price'];
+    actualPrice = json['actual_price'];
+    stock = json['stock'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.variantProperties != null) {
+      data['variant_properties'] =
+          this.variantProperties.map((v) => v.toJson()).toList();
+    }
+    data['_id'] = this.sId;
+    data['price'] = this.price;
+    data['actual_price'] = this.actualPrice;
+    data['stock'] = this.stock;
+    return data;
+  }
+}
+
+class VariantProperties {
+  String sId;
+  String variantType;
+  String variantValue;
+  String variantClass;
+
+  VariantProperties(
+      {this.sId, this.variantType, this.variantValue, this.variantClass});
+
+  VariantProperties.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    variantType = json['variant_type'];
+    variantValue = json['variant_value'];
+    variantClass = json['variant_class'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['variant_type'] = this.variantType;
+    data['variant_value'] = this.variantValue;
+    data['variant_class'] = this.variantClass;
     return data;
   }
 }

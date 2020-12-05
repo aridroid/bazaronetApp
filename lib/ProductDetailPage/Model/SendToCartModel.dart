@@ -1,64 +1,27 @@
-class AddToCartModel {
-  Data data;
-  bool success;
 
-  AddToCartModel({this.data, this.success});
+import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
-  AddToCartModel.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-    success = json['success'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
-    data['success'] = this.success;
-    return data;
-  }
-}
-
-class Data {
-  String sId;
+class SendToCartModel {
   String customerId;
-  int quantity;
   Product product;
-  String dateAdded;
-  String dateModified;
-  int iV;
+  int quantity;
 
-  Data(
-      {this.sId,
-        this.customerId,
-        this.quantity,
-        this.product,
-        this.dateAdded,
-        this.dateModified,
-        this.iV});
+  SendToCartModel({this.customerId, this.product, this.quantity});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
+  SendToCartModel.fromJson(Map<String, dynamic> json) {
     customerId = json['customer_id'];
-    quantity = json['quantity'];
     product =
     json['product'] != null ? new Product.fromJson(json['product']) : null;
-    dateAdded = json['date_added'];
-    dateModified = json['date_modified'];
-    iV = json['__v'];
+    quantity = json['quantity'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
     data['customer_id'] = this.customerId;
-    data['quantity'] = this.quantity;
     if (this.product != null) {
       data['product'] = this.product.toJson();
     }
-    data['date_added'] = this.dateAdded;
-    data['date_modified'] = this.dateModified;
-    data['__v'] = this.iV;
+    data['quantity'] = this.quantity;
     return data;
   }
 }
@@ -261,28 +224,28 @@ class Variant {
   }
 }
 
-class VariantProperties {
-  String sId;
-  String variantType;
-  String variantValue;
-  String variantClass;
-
-  VariantProperties(
-      {this.sId, this.variantType, this.variantValue, this.variantClass});
-
-  VariantProperties.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    variantType = json['variant_type'];
-    variantValue = json['variant_value'];
-    variantClass = json['variant_class'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['variant_type'] = this.variantType;
-    data['variant_value'] = this.variantValue;
-    data['variant_class'] = this.variantClass;
-    return data;
-  }
-}
+// class VariantProperties {
+//   String sId;
+//   String variantType;
+//   String variantValue;
+//   String variantClass;
+//
+//   VariantProperties(
+//       {this.sId, this.variantType, this.variantValue, this.variantClass});
+//
+//   VariantProperties.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     variantType = json['variant_type'];
+//     variantValue = json['variant_value'];
+//     variantClass = json['variant_class'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['variant_type'] = this.variantType;
+//     data['variant_value'] = this.variantValue;
+//     data['variant_class'] = this.variantClass;
+//     return data;
+//   }
+// }

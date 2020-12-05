@@ -4,6 +4,7 @@ import 'package:bazaronet_fresh/HomePage/Model/BannerModel.dart';
 import 'package:bazaronet_fresh/HomePage/Model/CategoryModel.dart';
 import 'package:bazaronet_fresh/HomePage/Repository/HomeRepository.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/SubCategoryPage.dart';
+import 'package:bazaronet_fresh/VerificationPage/VerificationPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -333,7 +334,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Container(
-                height: 240.0,
                 margin: EdgeInsets.only(
                     top: _minimumPadding, bottom: _minimumPadding),
                 child: FutureBuilder<CategoryModel>(
@@ -362,6 +362,7 @@ class _HomeState extends State<Home> {
                             return true;
                           },
                           child: GridView.builder(
+                            shrinkWrap: true,
                             itemCount: snapshot.data.data.length,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
@@ -487,15 +488,20 @@ class _HomeState extends State<Home> {
                         );
                       }),
               ),
-              Container(
-                height: 220,
-                margin: EdgeInsets.fromLTRB(_minimumPadding, _minimumPadding*2, _minimumPadding, _minimumPadding*2),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    image: DecorationImage(
-                        image: AssetImage('images/bottle.jpg'),
-                        fit: BoxFit.fill
-                    )
+              InkWell(
+                onTap: () {
+
+                },
+                child: Container(
+                  height: 220,
+                  margin: EdgeInsets.fromLTRB(_minimumPadding, _minimumPadding*2, _minimumPadding, _minimumPadding*2),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                          image: AssetImage('images/bottle.jpg'),
+                          fit: BoxFit.fill
+                      )
+                  ),
                 ),
               ),
               Container(

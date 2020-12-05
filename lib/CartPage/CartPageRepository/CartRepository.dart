@@ -1,6 +1,7 @@
 import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageModel/UpdateCartModel.dart';
 import 'package:bazaronet_fresh/helper/api_base_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartRepository {
 
@@ -12,7 +13,9 @@ class CartRepository {
   }
 
   Future<CartPageModel> getCartById(String id) async {
-    final response = await _helper.get('api/cart/'+id);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await _helper.getWithHeader('api/cart/'+id, token);
     return CartPageModel.fromJson(response);
   }
 

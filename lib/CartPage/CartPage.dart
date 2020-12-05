@@ -19,6 +19,7 @@ class Cart extends StatefulWidget {
 class _cartState extends State<Cart> {
   double _minimumPadding = 5.0;
   String userId;
+  String token;
   bool CheckValue;
   bool checkOutButtonState = false;
   SharedPreferences prefs;
@@ -57,6 +58,8 @@ class _cartState extends State<Cart> {
     CheckValue = checkValue;
     String stringValue = prefs.getString('userId');
     userId = stringValue;
+    token = prefs.getString('token');
+    print("Token:"+token);
     // cartModel = _cartRepository.getCartById(userId);
     setLoading();
   }

@@ -11,7 +11,7 @@ class SubCategoryPage extends StatefulWidget {
   _SubCategoryPageState createState() => _SubCategoryPageState();
 
   SubCategoryPage({this.id}) {
-    print(this.id);
+    print("IDD:"+this.id);
   }
 }
 
@@ -26,7 +26,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   }
 
   calculateDiscount(ProductData.Data data) {
-    double discount2 = (1 - data.actualPrice/data.price)*100;
+    double discount2 = (1 - data.variant[0].price/data.variant[0].actualPrice)*100;
     discount = discount2.toInt();
   }
 
@@ -94,6 +94,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                     backgroundColor: Color.fromRGBO(239, 121, 57, 1),
                     body: TabBarView(
                       children: snapshot.data.data.map((e) {
+                        print("Sub-Cat-Id:"+e.sId);
                         return FutureBuilder<ProductData.ProductModel>(
                             future: _subCategoryRepository.getProductBySubCategory(e.sId),
                             builder: (context, snapshot2) {
@@ -262,11 +263,11 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                     Spacer(),
                                                                     Row(
                                                                       children: [
-                                                                        Text("Rs."+snapshot2.data.data[index].actualPrice.toString()+" ",
+                                                                        Text("Rs."+snapshot2.data.data[index].variant[0].price.toString()+" ",
                                                                           style: TextStyle(
                                                                               fontSize: 15.0,),
                                                                         ),
-                                                                        Text("Rs."+snapshot2.data.data[index].price.toString(), style: TextStyle(
+                                                                        Text("Rs."+snapshot2.data.data[index].variant[0].actualPrice.toString(), style: TextStyle(
                                                                             decoration: TextDecoration.lineThrough,
                                                                           color: Colors.grey,
                                                                           fontSize: 15.0),

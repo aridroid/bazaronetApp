@@ -22,13 +22,14 @@ class ProductDetailBloc {
   }
 
   addToCart(Map body) async {
-    print("body");
-    print(body);
+    print("In Bloc");
     productDetailPageSink.add(ApiResponse.loading('Submitting'));
     try {
+      print("In Try");
       AddToCartModel addToCartModel = await _addToCartRepository.addToCart(body);
       productDetailPageSink.add(ApiResponse.completed(addToCartModel));
     } catch (e) {
+      print("In Catch");
       productDetailPageSink.add(ApiResponse.error(e.toString()));
       print(e);
     }
