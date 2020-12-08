@@ -23,7 +23,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class productdetails extends StatefulWidget {
   productData.Data data;
-  productdetails({this.data});
+  productdetails({this.data}){
+    print("Product Detail Page:"+data.toString());
+  }
   @override
   _productdetailsState createState() => _productdetailsState();
 }
@@ -801,13 +803,4 @@ class _productdetailsState extends State<productdetails> {
     });
   }
 
-  _launchURL() async {
-    var url = 'mailto:arindam@inceptorytech.com?subject=hello&body=' +
-        jsonEncode(product);
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }

@@ -1,4 +1,5 @@
 import 'package:bazaronet_fresh/AddressPage/AddressPage.dart';
+import 'package:bazaronet_fresh/AddressPage/SelectAddressPage.dart';
 import 'package:bazaronet_fresh/CartPage/CartBloc.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart' as cartData;
 import 'package:bazaronet_fresh/CartPage/CartPageModel/UpdateCartModel.dart';
@@ -20,7 +21,7 @@ class _cartState extends State<Cart> {
   double _minimumPadding = 5.0;
   String userId;
   String token;
-  bool CheckValue;
+  bool CheckValue = false;
   bool checkOutButtonState = false;
   SharedPreferences prefs;
   bool loading = true;
@@ -35,6 +36,7 @@ class _cartState extends State<Cart> {
 
   @override
   void initState() {
+    print("In Init");
     getuserId();
     _cartRepository = CartRepository();
     _cartBloc = CartBloc();
@@ -42,7 +44,7 @@ class _cartState extends State<Cart> {
 
   addAmount(cartData.CartPageModel data, int index) {
     Future.delayed(Duration.zero, () async {
-      cost= cost + data.data[index].product.actualPrice*data.data[index].quantity;
+      cost= cost + data.data[index].product.selectedVariant.price*data.data[index].quantity;
       print("Cost: "+cost.toString());
       checkOutButtonState = true;
       setState(() {
@@ -53,13 +55,13 @@ class _cartState extends State<Cart> {
 
 
   getuserId() async {
+    print("In Async");
     prefs = await SharedPreferences.getInstance();
     bool checkValue = prefs.containsKey('userId');
     CheckValue = checkValue;
     String stringValue = prefs.getString('userId');
     userId = stringValue;
     token = prefs.getString('token');
-    print("Token:"+token);
     // cartModel = _cartRepository.getCartById(userId);
     setLoading();
   }
@@ -89,7 +91,7 @@ class _cartState extends State<Cart> {
   }
 
   calculateDiscount(cartData.Data data) {
-    double discount2 = (1 - data.product.actualPrice/data.product.price)*100;
+    double discount2 = (1 - data.product.selectedVariant.price/data.product.selectedVariant.actualPrice)*100;
     discount = discount2.toInt();
   }
 
@@ -229,10 +231,10 @@ class _cartState extends State<Cart> {
                                           Spacer(),
                                           Row(
                                             children: [
-                                              Text("Rs."+snapshot.data.data[index].product.actualPrice.toString()+" ",
+                                              Text("Rs."+snapshot.data.data[index].product.selectedVariant.price.toString()+" ",
                                                 style: TextStyle(
                                                   fontSize: 15.0,),),
-                                              Text(" Rs."+snapshot.data.data[index].product.price.toString(), style: TextStyle(
+                                              Text(" Rs."+snapshot.data.data[index].product.selectedVariant.actualPrice.toString(), style: TextStyle(
                                                   decoration: TextDecoration.lineThrough,
                                                   color: Colors.grey,
                                                   fontSize: 15.0),),
@@ -267,8 +269,6 @@ class _cartState extends State<Cart> {
                                                   }
                                                   else{
                                                     Map body = new Map();
-                                                    body['customer_id'] = userId;
-                                                    body['product'] = snapshot.data.data[index].product.sId;
                                                     body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
                                                     selectedItem = index;
                                                     _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
@@ -349,8 +349,6 @@ class _cartState extends State<Cart> {
                                               InkWell(
                                                 onTap: () {
                                                   Map body = new Map();
-                                                  body['customer_id'] = userId;
-                                                  body['product'] = snapshot.data.data[index].product.sId;
                                                   body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
                                                   selectedItem = index;
                                                   _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
@@ -386,9 +384,25 @@ class _cartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return CircularProgressIndicator(
-        valueColor:
-            new AlwaysStoppedAnimation<Color>(Color.fromRGBO(239, 121, 57, 1),),
+      return Container(
+          decoration: new BoxDecoration(
+              color: Colors.white,
+              //new Color.fromRGBO(255, 0, 0, 0.0),
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(15.0),
+                  topRight: const Radius.circular(15.0))),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Card(
+              clipBehavior: Clip.hardEdge,
+              color: Colors.white70,
+              child: Center(
+                child: CircularProgressIndicator(
+                  valueColor:
+                  new AlwaysStoppedAnimation<Color>(orangeTheme),
+                ),
+              )
+          )
       );
     }
     if (!CheckValue) {
@@ -411,7 +425,8 @@ class _cartState extends State<Cart> {
                 new AlwaysStoppedAnimation<Color>(orangeTheme),
               ),
             )
-          ));
+          )
+      );
     } else {
       return Container(
         decoration: new BoxDecoration(
@@ -528,7 +543,7 @@ class _cartState extends State<Cart> {
   navigateToAddressPage() {
     Future.delayed(Duration.zero, () async {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => AddressPage()));
+          MaterialPageRoute(builder: (context) => AddressListPage()));
     });
   }
 }

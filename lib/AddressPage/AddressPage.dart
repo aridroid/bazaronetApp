@@ -1,5 +1,6 @@
 import 'package:bazaronet_fresh/AddressPage/AddressBloc.dart';
 import 'package:bazaronet_fresh/AddressPage/AddressModel/SaveAddressModel.dart';
+import 'package:bazaronet_fresh/AddressPage/SelectAddressPage.dart';
 import 'package:bazaronet_fresh/RazorPayPage/RazorPayPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:flutter/material.dart';
@@ -400,7 +401,7 @@ class _AddressPageState extends State<AddressPage> {
                     Map body = {
                       "customer_id": "$userId",
                       "type": "${_addressType.text}",
-                      "fullName": "${userName}",
+                      "fullName": "${_nameAddress.text}",
                       "email": "$email",
                       "phone": "${_phone.text}",
                       "state": "${_state.text}",
@@ -513,7 +514,7 @@ class _AddressPageState extends State<AddressPage> {
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => RazorPayScreen())
+              MaterialPageRoute(builder: (context) => AddressListPage())
           );
     });
   }

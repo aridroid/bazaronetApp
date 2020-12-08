@@ -5,7 +5,9 @@ import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
 class NewLoginPage extends StatefulWidget {
   Data data;
-  NewLoginPage({this.data});
+  NewLoginPage({this.data}){
+    print("New Login Page:"+data.toString());
+  }
   @override
   _NewLoginPageState createState() => _NewLoginPageState();
 }
@@ -14,14 +16,14 @@ class _NewLoginPageState extends State<NewLoginPage> {
   navigateLogin() {
     Future.delayed(Duration.zero, () async {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => loginpage(data: null)));
+          MaterialPageRoute(builder: (context) => loginpage(data: widget.data)));
     });
   }
 
   navigateSignUp() {
     Future.delayed(Duration.zero, () async {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => SignupPage(data: null)));
+          MaterialPageRoute(builder: (context) => SignupPage(data: widget.data)));
     });
   }
 
