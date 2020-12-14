@@ -348,56 +348,43 @@ class _HomeState extends State<Home> {
                         );
                       }
                       else if (snapshot.hasData) {
-                        return NotificationListener<OverscrollNotification>(
-                          onNotification: (OverscrollNotification value) {
-                            if (value.overscroll < 0 && controller.offset + value.overscroll <= 0) {
-                              if (controller.offset != 0) controller.jumpTo(0);
-                              return true;
-                            }
-                            if (controller.offset + value.overscroll >= controller.position.maxScrollExtent) {
-                              if (controller.offset != controller.position.maxScrollExtent) controller.jumpTo(controller.position.maxScrollExtent);
-                              return true;
-                            }
-                            controller.jumpTo(controller.offset + value.overscroll);
-                            return true;
-                          },
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.data.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: _minimumPadding,
-                                mainAxisSpacing: _minimumPadding,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SubCategoryPage(
-                                                id: snapshot.data
-                                                    .data[index].sId)
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      elevation: 5.0,
-                                      child: Image.network(
-                                        'http://139.59.91.150:3333/uploads/'
-                                            + snapshot.data.data[index].image,
-                                        fit: BoxFit.fill,)
-                                    // ignore: dead_code
-                                  ),
-                                ),
-                              );
-                            },
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.data.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: _minimumPadding,
+                              mainAxisSpacing: _minimumPadding,
                           ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SubCategoryPage(
+                                              id: snapshot.data
+                                                  .data[index].sId)
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    elevation: 5.0,
+                                    child: Image.network(
+                                      'http://139.59.91.150:3333/uploads/'
+                                          + snapshot.data.data[index].image,
+                                      fit: BoxFit.fill,)
+                                  // ignore: dead_code
+                                ),
+                              ),
+                            );
+                          },
                         );
                       } else {
                         return Container();

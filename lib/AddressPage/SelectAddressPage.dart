@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:bazaronet_fresh/AddressPage/AddressModel/SelectAddressModel.dart';
 import 'package:bazaronet_fresh/AddressPage/AddressPage.dart';
 import 'package:bazaronet_fresh/AddressPage/AddressRepository/AddressRepository.dart';
@@ -7,6 +10,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressListPage extends StatefulWidget {
+  Map product;
+  List<String> ids;
+  AddressListPage({this.product, this.ids}){
+    log("Product:"+product.toString());
+  }
   @override
   _AddressListPageState createState() => _AddressListPageState();
 }
@@ -53,8 +61,16 @@ class _AddressListPageState extends State<AddressListPage> {
           backgroundColor: Colors.deepOrange,
           onPressed: () {
             if(_addressId!=""){
+              widget.product["billing_address_id"]= data[selectedAddressIndex];
+              widget.product["shipping_address_id"]= data[selectedAddressIndex];
+              log("Product:"+jsonEncode(widget.product));
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RazorPayScreen()));
+                  MaterialPageRoute(builder: (context) => RazorPayScreen(
+                    product: widget.product,
+                    ids: widget.ids
+                  )
+                )
+              );
             }
             else{
               Fluttertoast.showToast(
@@ -121,7 +137,10 @@ class _AddressListPageState extends State<AddressListPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddressPage()));
+                          builder: (context) => AddressPage(
+                            product: widget.product,
+                            ids: widget.ids
+                          )));
                 },
                 child: Row(
                   children: [

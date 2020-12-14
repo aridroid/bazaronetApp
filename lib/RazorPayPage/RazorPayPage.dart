@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
+import 'package:bazaronet_fresh/RazorPayPage/Bloc/DeleteCartBloc.dart';
+import 'package:bazaronet_fresh/RazorPayPage/Model/AddOrderProductModel.dart';
+import 'file:///D:/Flutter/bazaronet_fresh/lib/RazorPayPage/Bloc/RazorPayBloc.dart';
 import 'package:bazaronet_fresh/helper/api_base_helper.dart';
+import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -12,9 +16,11 @@ class RazorPayScreen extends StatefulWidget {
   //final OrderPlaceResponseModel snapshotData;
   final String userToken;
   final String totalCartAmount;
+  final Map product;
+  final List<String> ids;
 
 
-  const RazorPayScreen({Key key, this.userToken,this.totalCartAmount}) : super(key: key);
+  const RazorPayScreen({Key key, this.userToken,this.totalCartAmount, this.product, this.ids}) : super(key: key);
   @override
   _RazorPayScreenState createState() => _RazorPayScreenState();
 }
@@ -27,7 +33,9 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
   SharedPreferences prefs;
   String userPhone;
   String userEmail;
-
+  RazorPayBloc _razorPayBloc = RazorPayBloc();
+  Map<String, List<String>> ids = new Map<String, List<String>>();
+  DeleteCartBloc _deleteCartBloc = DeleteCartBloc();
 
 
   ApiBaseHelper _apiBaseHelper=new ApiBaseHelper();
@@ -60,13 +68,108 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
                 height: 35.0,
               )),
         ),
-        body: Center(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                      onPressed: openCheckout, child: Text('Pay Using RazorPay'))
-                ])),
+        body: ListView(
+          children: [
+            Center(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                          onPressed: openCheckout, child: Text('Pay Using RazorPay')
+                      )
+                    ]
+                )
+            ),
+            StreamBuilder<ApiResponse<AddOrderProductModel>>(
+              stream: _razorPayBloc.razorPayStream,
+              builder:(context, snapshot) {
+                if(snapshot.hasData)
+                {
+                  switch(snapshot.data.status)
+                  {
+                    case Status.LOADING:
+                      print("Case 1");
+                      print(snapshot);
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                              Color.fromRGBO(255, 241, 232, 1),
+                            ),
+                          ),
+                        );
+                      break;
+                    case Status.COMPLETED:
+                      Future.delayed(Duration.zero, () async {
+                        // _showResponse("Success");
+                        print("Ids:"+widget.ids.toString());
+                        ids['ids']= widget.ids;
+                        print("Map Ids:"+ids.toString());
+                        _deleteCartBloc.deleteCartIds(ids);
+                      });
+                      break;
+                    case Status.ERROR:
+                      print("Case 3");
+                      print(snapshot);
+                      Fluttertoast.showToast(
+                          msg: "Failed",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
+                      break;
+                  }
+                }
+
+                return Container();
+              },
+            ),
+            StreamBuilder<ApiResponse>(
+              stream: _deleteCartBloc.razorPayStream,
+              builder:(context, snapshot) {
+                if(snapshot.hasData)
+                {
+                  switch(snapshot.data.status)
+                  {
+                    case Status.LOADING:
+                      print("Case 1");
+                      print(snapshot);
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                            Color.fromRGBO(255, 241, 232, 1),
+                          ),
+                        ),
+                      );
+                      break;
+                    case Status.COMPLETED:
+                      Future.delayed(Duration.zero, () async {
+                        _showResponse("Success");
+                      });
+                      break;
+                    case Status.ERROR:
+                      print("Case 3");
+                      print(snapshot);
+                      Fluttertoast.showToast(
+                          msg: "Failed",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
+                      break;
+                  }
+                }
+
+                return Container();
+              },
+            )
+          ],
+        ),
       ),
     );
   }
@@ -157,7 +260,8 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
-    _showResponse("Success");
+    _razorPayBloc.addOrder(widget.product);
+    // _showResponse("Success");
 
   }
 

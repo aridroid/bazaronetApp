@@ -154,6 +154,25 @@ class ApiBaseHelper {
     print('api delete.');
     return apiResponse;
   }
+
+  Future<dynamic> deleteWithHeader(String url, String token) async {
+    print(_baseUrl + url);
+    print('Api token, token $token');
+    var responseJson;
+    try {
+      final response =
+      await http.delete(_baseUrl + url, headers: {"token": token});
+      if(response.statusCode == 200){
+        responseJson = "Success";
+      }
+      // responseJson = _returnResponse(response);
+    } on SocketException {
+      print('No net');
+      throw FetchDataException('No Internet connection');
+    }
+    print('api delete.');
+    return responseJson;
+  }
 }
 
 dynamic _returnResponse(http.Response response) {

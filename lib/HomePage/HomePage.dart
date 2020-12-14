@@ -5,6 +5,7 @@ import 'package:bazaronet_fresh/HomePage/home.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/OrderPage/OrderPage.dart';
 import 'package:bazaronet_fresh/ProfilePage/ProfilePage.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,32 +104,43 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-          label: 'Home',
-          ),
-          BottomNavigationBarItem(
-          icon: Icon(Icons.card_travel),
-          label: 'My Order',
-          ),
-          BottomNavigationBarItem(
-          icon: Icon(Icons.add_shopping_cart),
-          label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-          icon: Icon(Icons.supervised_user_circle_outlined),
-          label: 'Profile',
-          ),
+      bottomNavigationBar: CurvedNavigationBar(
+        items: <Widget>[
+          Icon(Icons.home, size: 30),
+          Icon(Icons.card_travel, size: 30),
+          Icon(Icons.add_shopping_cart, size: 30),
+          Icon(Icons.supervised_user_circle_outlined, size: 30),
         ],
-        backgroundColor: Color.fromRGBO(239, 121, 57, 1),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white54,
-        currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-    ),
+        backgroundColor: Colors.white,
+        color: Color.fromRGBO(239, 121, 57, 1),
+      ),
+    //   BottomNavigationBar(
+    //     type: BottomNavigationBarType.fixed,
+    //     items: const <BottomNavigationBarItem>[
+    //       BottomNavigationBarItem(
+    //           icon: Icon(Icons.home),
+    //       label: 'Home',
+    //       ),
+    //       BottomNavigationBarItem(
+    //       icon: Icon(Icons.card_travel),
+    //       label: 'My Order',
+    //       ),
+    //       BottomNavigationBarItem(
+    //       icon: Icon(Icons.add_shopping_cart),
+    //       label: 'Cart',
+    //       ),
+    //       BottomNavigationBarItem(
+    //       icon: Icon(Icons.supervised_user_circle_outlined),
+    //       label: 'Profile',
+    //       ),
+    //     ],
+    //     backgroundColor: Color.fromRGBO(239, 121, 57, 1),
+    //     selectedItemColor: Colors.white,
+    //     unselectedItemColor: Colors.white54,
+    //     currentIndex: _selectedIndex,
+    //     onTap: _onItemTapped,
+    // ),
     );
   }
 }

@@ -11,6 +11,9 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AddressPage extends StatefulWidget {
+  Map product;
+  List<String> ids;
+  AddressPage({this.product, this.ids});
   @override
   _AddressPageState createState() => _AddressPageState();
 }
@@ -514,7 +517,12 @@ class _AddressPageState extends State<AddressPage> {
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => AddressListPage())
+              MaterialPageRoute(
+                  builder: (context) => AddressListPage(
+                    product: widget.product,
+                    ids: widget.ids
+                  )
+              )
           );
     });
   }

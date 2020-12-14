@@ -19,10 +19,11 @@ class CartRepository {
     return CartPageModel.fromJson(response);
   }
 
-  // Future delete(String id) async {
-  //   final response = await _helper.delete('api/cart/'+id);
-  //   return (response);
-  // }
-
+  Future deleteCartById(String id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await _helper.deleteWithHeader('api/cart/'+id, token);
+    return response;
+  }
 
 }

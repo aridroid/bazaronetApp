@@ -1,9 +1,10 @@
 import 'package:bazaronet_fresh/AddressPage/AddressPage.dart';
 import 'package:bazaronet_fresh/AddressPage/SelectAddressPage.dart';
-import 'package:bazaronet_fresh/CartPage/CartBloc.dart';
+import 'file:///D:/Flutter/bazaronet_fresh/lib/CartPage/CartBloc/CartBloc.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart' as cartData;
 import 'package:bazaronet_fresh/CartPage/CartPageModel/UpdateCartModel.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageRepository/CartRepository.dart';
+import 'file:///D:/Flutter/bazaronet_fresh/lib/CartPage/CartBloc/DeleteProductBloc.dart';
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
@@ -21,6 +22,8 @@ class _cartState extends State<Cart> {
   double _minimumPadding = 5.0;
   String userId;
   String token;
+  String userName;
+  String email;
   bool CheckValue = false;
   bool checkOutButtonState = false;
   SharedPreferences prefs;
@@ -28,11 +31,17 @@ class _cartState extends State<Cart> {
   CartRepository _cartRepository;
   double cost = 0;
   int selectedItem;
+  int deletedItem;
   List<int> _quantityController = new List();
   Future<cartData.CartPageModel> cartModel;
   CartBloc _cartBloc;
+  DeleteProductBloc _deleteProductBloc;
   int discount;
   Color orangeTheme = Color.fromRGBO(239, 121, 57, 1);
+  Map product = new Map();
+  List<Products> orderedProducts = new List<Products>();
+  List<cartData.Data> allProducts = new List<cartData.Data>();
+  List<String> ids = new List<String>();
 
   @override
   void initState() {
@@ -40,6 +49,7 @@ class _cartState extends State<Cart> {
     getuserId();
     _cartRepository = CartRepository();
     _cartBloc = CartBloc();
+    _deleteProductBloc = DeleteProductBloc();
   }
 
   addAmount(cartData.CartPageModel data, int index) {
@@ -62,6 +72,9 @@ class _cartState extends State<Cart> {
     String stringValue = prefs.getString('userId');
     userId = stringValue;
     token = prefs.getString('token');
+    userName = prefs.getString('userName');
+    email = prefs.getString('email');
+    // print("Token:"+token);
     // cartModel = _cartRepository.getCartById(userId);
     setLoading();
   }
@@ -112,6 +125,7 @@ class _cartState extends State<Cart> {
               }
               else{
                 print("Loaded");
+                allProducts = snapshot.data.data;
                 return ListView.builder(
                     itemCount: snapshot.data.data.length,
                     itemBuilder: (context, index) {
@@ -193,17 +207,78 @@ class _cartState extends State<Cart> {
                                                     fontSize: 15.0
                                                 ),
                                               ),
-                                              // Spacer(),
-                                              // InkWell(
-                                              //   onTap: () {
-                                              //
-                                              //   },
-                                              //   child:
-                                              //   Icon(
-                                              //     Icons.delete,
-                                              //     color: Colors.grey,
-                                              //   ),
-                                              // ),
+                                              Spacer(),
+                                              InkWell(
+                                                onTap: () {
+                                                  deletedItem = index;
+                                                  _deleteProductBloc.deleteCartById(snapshot.data.data[index].sId);
+                                                },
+                                                child: StreamBuilder<ApiResponse>(
+                                                  stream: _deleteProductBloc.deleteProductStream,
+                                                  builder:(context, snapshot3) {
+                                                    if(snapshot3.hasData)
+                                                    {
+                                                      switch(snapshot3.data.status)
+                                                      {
+                                                        case Status.LOADING:
+                                                          print("Case 1:Index"+index.toString());
+                                                          print(snapshot3);
+                                                          if(index == deletedItem){
+                                                            return Center(
+                                                              child: CircularProgressIndicator(
+                                                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                                                  Color.fromRGBO(255, 241, 232, 1),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+                                                          break;
+                                                        case Status.COMPLETED:
+                                                          if(index == deletedItem){
+                                                            print("Case 2:Index"+index.toString());
+                                                            reload(selectedItem);
+                                                          }
+                                                          return Padding(
+                                                            padding: EdgeInsets.only(right: 5.0),
+                                                            child: Icon(
+                                                              Icons.delete,
+                                                              color: Colors.grey,
+                                                            ),
+                                                          );
+                                                          break;
+                                                        case Status.ERROR:
+                                                          print("Case 3");
+                                                          print(snapshot3);
+                                                          Fluttertoast.showToast(
+                                                              msg: "Failed",
+                                                              toastLength: Toast.LENGTH_SHORT,
+                                                              gravity: ToastGravity.CENTER,
+                                                              timeInSecForIosWeb: 1,
+                                                              backgroundColor: Colors.red,
+                                                              textColor: Colors.white,
+                                                              fontSize: 16.0
+                                                          );
+                                                          return Padding(
+                                                            padding: EdgeInsets.only(right: 5.0),
+                                                            child: Icon(
+                                                              Icons.delete,
+                                                              color: Colors.grey,
+                                                            ),
+                                                          );
+                                                          break;
+                                                      }
+                                                    }
+
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(right: 5.0),
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           Spacer(),
@@ -541,9 +616,332 @@ class _cartState extends State<Cart> {
   }
 
   navigateToAddressPage() {
+    product["customer_id"] = userId;
+    product["customer"] = new Customer(
+      loggedin: true,
+      token: token,
+      id: userId,
+      name: userName,
+      email: email,
+      phone: "+917278682875"
+    );
+    generateProducts();
+    product["products"] = orderedProducts;
+    product["payment"] = "1234";
+    product["total"] = "1234";
     Future.delayed(Duration.zero, () async {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => AddressListPage()));
+          MaterialPageRoute(builder: (context) => AddressListPage(
+            product: product,
+            ids: ids
+          )));
     });
+  }
+
+  generateProducts() {
+    for(int i = 0; i<= allProducts.length -1; i++){
+      orderedProducts.add(
+        new Products(
+          quantity: allProducts[i].quantity,
+          product: allProducts[i].product
+        )
+      );
+      ids.add(allProducts[i].sId);
+    }
+  }
+}
+
+class Customer {
+  bool loggedin;
+  String id;
+  String email;
+  String name;
+  String phone;
+  String token;
+
+  Customer(
+      {this.loggedin, this.id, this.email, this.name, this.phone, this.token});
+
+  Customer.fromJson(Map<String, dynamic> json) {
+    loggedin = json['loggedin'];
+    id = json['id'];
+    email = json['email'];
+    name = json['name'];
+    phone = json['phone'];
+    token = json['token'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['loggedin'] = this.loggedin;
+    data['id'] = this.id;
+    data['email'] = this.email;
+    data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['token'] = this.token;
+    return data;
+  }
+}
+
+
+class Products {
+  cartData.Product product;
+  int quantity;
+
+  Products({this.product, this.quantity});
+
+  Products.fromJson(Map<String, dynamic> json) {
+    product =
+    json['product'] != null ? new cartData.Product.fromJson(json['product']) : null;
+    quantity = json['quantity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.product != null) {
+      data['product'] = this.product.toJson();
+    }
+    data['quantity'] = this.quantity;
+    return data;
+  }
+}
+
+class Product {
+  int tax;
+  List<String> image;
+  int shipping;
+  int minAmountForFreeShipping;
+  bool status;
+  String delivery;
+  String sId;
+  String name;
+  String model;
+  Category category;
+  String subcategory;
+  String manufacturer;
+  int unit;
+  int quantity;
+  String quantityClass;
+  String description;
+  Variant variant;
+  String dateAdded;
+  String dateModified;
+  int v;
+  Variant selectedVariant;
+
+  Product(
+      {this.tax,
+        this.image,
+        this.shipping,
+        this.minAmountForFreeShipping,
+        this.status,
+        this.delivery,
+        this.sId,
+        this.name,
+        this.model,
+        this.category,
+        this.subcategory,
+        this.manufacturer,
+        this.unit,
+        this.quantity,
+        this.quantityClass,
+        this.description,
+        this.variant,
+        this.dateAdded,
+        this.dateModified,
+        this.v,
+        this.selectedVariant});
+
+  Product.fromJson(Map<String, dynamic> json) {
+    tax = json['tax'];
+    image = json['image'].cast<String>();
+    shipping = json['shipping'];
+    minAmountForFreeShipping = json['min_amount_for_free_shipping'];
+    status = json['status'];
+    delivery = json['delivery'];
+    sId = json['_id'];
+    name = json['name'];
+    model = json['model'];
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+    subcategory = json['subcategory'];
+    manufacturer = json['manufacturer'];
+    unit = json['unit'];
+    quantity = json['quantity'];
+    quantityClass = json['quantity_class'];
+    description = json['description'];
+    variant =
+    json['variant'] != null ? new Variant.fromJson(json['variant']) : null;
+    dateAdded = json['date_added'];
+    dateModified = json['date_modified'];
+    v = json['v'];
+    selectedVariant = json['selectedVariant'] != null
+        ? new Variant.fromJson(json['selectedVariant'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['tax'] = this.tax;
+    data['image'] = this.image;
+    data['shipping'] = this.shipping;
+    data['min_amount_for_free_shipping'] = this.minAmountForFreeShipping;
+    data['status'] = this.status;
+    data['delivery'] = this.delivery;
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['model'] = this.model;
+    if (this.category != null) {
+      data['category'] = this.category.toJson();
+    }
+    data['subcategory'] = this.subcategory;
+    data['manufacturer'] = this.manufacturer;
+    data['unit'] = this.unit;
+    data['quantity'] = this.quantity;
+    data['quantity_class'] = this.quantityClass;
+    data['description'] = this.description;
+    if (this.variant != null) {
+      data['variant'] = this.variant.toJson();
+    }
+    data['date_added'] = this.dateAdded;
+    data['date_modified'] = this.dateModified;
+    data['v'] = this.v;
+    if (this.selectedVariant != null) {
+      data['selectedVariant'] = this.selectedVariant.toJson();
+    }
+    return data;
+  }
+}
+
+class Category {
+  bool status;
+  String sId;
+  String name;
+  int sortOrder;
+  String description;
+  String image;
+  String dateAdded;
+  String dateModified;
+  int v;
+
+  Category(
+      {this.status,
+        this.sId,
+        this.name,
+        this.sortOrder,
+        this.description,
+        this.image,
+        this.dateAdded,
+        this.dateModified,
+        this.v});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    sId = json['_id'];
+    name = json['name'];
+    sortOrder = json['sort_order'];
+    description = json['description'];
+    image = json['image'];
+    dateAdded = json['date_added'];
+    dateModified = json['date_modified'];
+    v = json['v'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['sort_order'] = this.sortOrder;
+    data['description'] = this.description;
+    data['image'] = this.image;
+    data['date_added'] = this.dateAdded;
+    data['date_modified'] = this.dateModified;
+    data['v'] = this.v;
+    return data;
+  }
+}
+
+class Variant {
+  List<VariantProperties> variantProperties;
+  String sId;
+  int price;
+  int actualPrice;
+  int stock;
+
+  Variant(
+      {this.variantProperties,
+        this.sId,
+        this.price,
+        this.actualPrice,
+        this.stock});
+
+  Variant.fromJson(Map<String, dynamic> json) {
+    if (json['variant_properties'] != null) {
+      variantProperties = new List<VariantProperties>();
+      json['variant_properties'].forEach((v) {
+        variantProperties.add(new VariantProperties.fromJson(v));
+      });
+    }
+    sId = json['_id'];
+    price = json['price'];
+    actualPrice = json['actual_price'];
+    stock = json['stock'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.variantProperties != null) {
+      data['variant_properties'] =
+          this.variantProperties.map((v) => v.toJson()).toList();
+    }
+    data['_id'] = this.sId;
+    data['price'] = this.price;
+    data['actual_price'] = this.actualPrice;
+    data['stock'] = this.stock;
+    return data;
+  }
+}
+
+class VariantProperties {
+  String sId;
+  String variantType;
+  String variantValue;
+  String variantClass;
+
+  VariantProperties(
+      {this.sId, this.variantType, this.variantValue, this.variantClass});
+
+  VariantProperties.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    variantType = json['variant_type'];
+    variantValue = json['variant_value'];
+    variantClass = json['variant_class'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['variant_type'] = this.variantType;
+    data['variant_value'] = this.variantValue;
+    data['variant_class'] = this.variantClass;
+    return data;
+  }
+}
+
+class DeletableIds {
+  List<String> ids;
+
+  DeletableIds({this.ids});
+
+  DeletableIds.fromJson(Map<String, dynamic> json) {
+    ids = json['ids'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ids'] = this.ids;
+    return data;
   }
 }

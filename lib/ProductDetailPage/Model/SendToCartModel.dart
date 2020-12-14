@@ -1,4 +1,3 @@
-
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
 class SendToCartModel {
