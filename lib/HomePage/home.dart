@@ -134,7 +134,8 @@ class _HomeState extends State<Home> {
                         } else {
                           return Container();
                         }
-                      })),
+                      })
+              ),
               Container(
                 padding: EdgeInsets.only(
                     top: _minimumPadding,
@@ -336,7 +337,8 @@ class _HomeState extends State<Home> {
               Container(
                 margin: EdgeInsets.only(
                     top: _minimumPadding, bottom: _minimumPadding),
-                child: FutureBuilder<CategoryModel>(
+                child:
+                FutureBuilder<CategoryModel>(
                     future: _homeRepository.getCategory(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {

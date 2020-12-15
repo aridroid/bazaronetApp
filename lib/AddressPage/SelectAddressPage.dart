@@ -56,8 +56,8 @@ class _AddressListPageState extends State<AddressListPage> {
     screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButtonLocation: widget.product != null ?  FloatingActionButtonLocation.centerFloat: null,
+        floatingActionButton: widget.product == null ? null : FloatingActionButton.extended(
           backgroundColor: Colors.deepOrange,
           onPressed: () {
             if(_addressId!=""){
@@ -195,7 +195,7 @@ class _AddressListPageState extends State<AddressListPage> {
                                   children: [
                                     Expanded(
                                       flex: 1,
-                                      child: Radio(
+                                      child: widget.product == null ? Container() : Radio(
                                         value: snapshot.data.data[index].sId,
                                         groupValue: _addressId,
                                         onChanged: (value) {

@@ -34,6 +34,7 @@ dependencies:
   pinput: ^0.2.6
   url_launcher: ^3.0.1
   curved_navigation_bar: ^0.3.4
+  intl: ^0.16.1
   flutter:
     sdk: flutter
 
@@ -59,27 +60,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/menu.png
-    - images/logo.png
-    - images/banner.png
-    - images/shopping-bag.png
-    - images/choose.png
-    - images/gdp.png
-    - images/price-tag.png
-    - images/coupon1.png
-    - images/coupon2.png
-    - images/coupon3.png
-    - images/diapers.jpg
-    - images/user.jpg
-    - images/coffeemaker.jpg
-    - images/bottle.jpg
-    - images/cleaning.png
-    - images/electrical.png
-    - images/sink.png
-    - images/bg.png
-    - images/facebook.png
-    - images/google.png
-    - images/twitter.png
+    - images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

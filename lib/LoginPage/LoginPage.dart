@@ -217,37 +217,20 @@ class _loginpageState extends State<loginpage> {
                         child: Center(child: Text("Don't have an account?",style: TextStyle(color: Colors.black,fontSize: 16),)),
                       ),
                     ),
-                    Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height*.1,
-                        width: MediaQuery.of(context).size.width*.87,
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("images/twitter.png"),
-                                  )
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("images/google.png")
-                                  )
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("images/facebook.png")
-                                  )
-                              ),
-                            ),
-                          ],
-                        ),
+                    Container(
+                      margin: EdgeInsets.only(top: 50),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.3,
+                          ),
+                          Image.asset("images/facebook.png", height: 50, width: 50,),
+                          Spacer(),
+                          Image.asset("images/google.png", height: 50, width: 50,),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.3,
+                          ),
+                        ],
                       ),
                     )
                   ]
