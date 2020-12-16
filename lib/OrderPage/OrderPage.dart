@@ -1,4 +1,5 @@
 import 'package:bazaronet_fresh/OrderPage/Model/OrderPageModel.dart';
+import 'package:bazaronet_fresh/OrderPage/OrderHistoryPage.dart';
 import 'package:bazaronet_fresh/OrderPage/Repository/OrderPageRepository.dart';
 import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -169,11 +170,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               physics: ScrollPhysics(),
                               itemCount: snapshot.data.data.length,
                               itemBuilder: (context, index){
-                                print("Length:"+snapshot.data.data.length.toString());
                                 statusCol=Colors.red;
                                 return InkWell(
                                   onTap: (){
-
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => OrderHistoryPage(
+                                          orderedData: snapshot.data.data[index]
+                                        ))
+                                    );
                                   },
                                   child: Container(
                                     height: screenHeight*0.17,

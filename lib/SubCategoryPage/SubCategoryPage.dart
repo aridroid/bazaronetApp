@@ -110,6 +110,10 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                     child: Card(
                                         clipBehavior: Clip.hardEdge,
                                         color: Colors.white70,
+                                        margin: EdgeInsets.zero,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+                                        ),
                                         child: Center(
                                   child: CircularProgressIndicator(
                                     valueColor: new AlwaysStoppedAnimation<Color>(
@@ -132,6 +136,10 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                   child: Card(
                                     clipBehavior: Clip.hardEdge,
                                     color: Colors.white70,
+                                    margin: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+                                    ),
                                     child: Column(
                                       children: [
                                         Container(
@@ -362,6 +370,10 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                     child: Card(
                     clipBehavior: Clip.hardEdge,
                     color: Colors.white70,
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+                        ),
                     child: ListView()
                     )
                   )

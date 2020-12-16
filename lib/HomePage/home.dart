@@ -54,6 +54,10 @@ class _HomeState extends State<Home> {
         child: Card(
           clipBehavior: Clip.hardEdge,
           color: Colors.white70,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+          ),
           child: ListView(
             controller: controller,
             children: [
