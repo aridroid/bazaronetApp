@@ -249,12 +249,12 @@ class _loginpageState extends State<loginpage> {
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
       if(widget.data == null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:
-            (context) => HomePage()));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
+            (context) => HomePage()), (Route<dynamic> route) => false);
       }
       else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:
-            (context) => productdetails(data: widget.data)));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
+            (context) => productdetails(data: widget.data)), (Route<dynamic> route) => false);
       }
     });
   }

@@ -1,10 +1,10 @@
 import 'package:bazaronet_fresh/AddressPage/AddressPage.dart';
 import 'package:bazaronet_fresh/AddressPage/SelectAddressPage.dart';
-import 'file:///D:/Flutter/bazaronet_fresh/lib/CartPage/CartBloc/CartBloc.dart';
+import 'package:bazaronet_fresh/CartPage/CartBloc/CartBloc.dart';
+import 'package:bazaronet_fresh/CartPage/CartBloc/DeleteProductBloc.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageModel/CartPageModel.dart' as cartData;
 import 'package:bazaronet_fresh/CartPage/CartPageModel/UpdateCartModel.dart';
 import 'package:bazaronet_fresh/CartPage/CartPageRepository/CartRepository.dart';
-import 'file:///D:/Flutter/bazaronet_fresh/lib/CartPage/CartBloc/DeleteProductBloc.dart';
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';

@@ -53,8 +53,10 @@ class _ProfileState extends State<Profile> {
   }
   navigateScreen() {
     Future.delayed(Duration.zero, () async {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => NewLoginPage(data: null)));
+      Future.delayed(Duration.zero, () async {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+            NewLoginPage(data: null,)), (Route<dynamic> route) => false);
+      });
     });
   }
 

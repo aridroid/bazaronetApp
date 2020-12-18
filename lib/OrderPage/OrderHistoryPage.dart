@@ -76,7 +76,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                   padding: EdgeInsets.all(10),
                                   child: Text('#'+widget.orderedData.sId, style: TextStyle(
                                     fontSize: 15.0,
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.bold, letterSpacing: 1.2
                                   ),),
                                 ),
                                 Spacer(),
@@ -192,7 +192,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                                 child: Text('Cancel Order', style: TextStyle(
-                                  fontSize: 20
+                                  fontSize: 17,
                                 ),),
                               ),
                             )

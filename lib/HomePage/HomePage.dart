@@ -65,8 +65,8 @@ class _HomePageState extends State<HomePage> {
     prefs.remove("email");
     prefs.remove("token");
     Future.delayed(Duration.zero, () async {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomePage.second(selectedIndex: _selectedIndex)));
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+          HomePage.second(selectedIndex: _selectedIndex)), (Route<dynamic> route) => false);
     });
   }
   navigateScreen() {
