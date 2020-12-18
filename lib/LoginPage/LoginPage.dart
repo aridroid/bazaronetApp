@@ -1,4 +1,5 @@
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginBloc.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginModel/LoginModel.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class loginpage extends StatefulWidget {
   Data data;
@@ -23,10 +26,49 @@ class _loginpageState extends State<loginpage> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   @override
   void initState() {
     _loginBloc = LoginBloc();
+  }
+
+  Future<String> signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+    await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+    );
+
+    // final AuthResult authResult = await _auth.signInWithCredential(credential);
+    final User user = (await _auth.signInWithCredential(credential)).user;
+
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final User currentUser = _auth.currentUser;
+    assert(user.uid == currentUser.uid);
+    print("User:"+user.toString());
+    // signOutGoogle();
+    Fluttertoast.showToast(
+        msg: "Hello "+user.displayName,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 1
+    );
+    return 'signInWithGoogle succeeded: $user';
+  }
+
+  void signOutGoogle() async{
+    await googleSignIn.signOut();
+
+    print("User Sign Out");
   }
 
   @override
@@ -226,7 +268,15 @@ class _loginpageState extends State<loginpage> {
                           ),
                           Image.asset("images/facebook.png", height: 50, width: 50,),
                           Spacer(),
-                          Image.asset("images/google.png", height: 50, width: 50,),
+                          InkWell(
+                            onTap: () {
+                              signInWithGoogle().whenComplete(() {
+                                signOutGoogle();
+                                print("complete");
+                              });
+                            },
+                            child: Image.asset("images/google.png", height: 50, width: 50,)
+                          ),
                           Container(
                             width: MediaQuery.of(context).size.width*0.3,
                           ),

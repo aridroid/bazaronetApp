@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "662667008382",
+    "project_id": "bazaronet-d6ff9",
+    "storage_bucket": "bazaronet-d6ff9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662667008382:android:dc6892a7ea057d46673b2f",
+        "android_client_info": {
+          "package_name": "com.inceptory.bazaronet_fresh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662667008382-k9lb9vv2h8jj5mvm2rg7anv4buhbb0mp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inceptory.bazaronet_fresh",
+            "certificate_hash": "0bb2a8bd4670e18665e060e48d10bcbe48b89fd8"
+          }
+        },
+        {
+          "client_id": "662667008382-hh3j6942pfbnpobd4qsnvsmpi5c5t5vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSN43OJdn8GFFANH7-7y8nIywsb8bx134"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662667008382-hh3j6942pfbnpobd4qsnvsmpi5c5t5vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

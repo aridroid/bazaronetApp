@@ -49,13 +49,14 @@ class _ProfileState extends State<Profile> {
     prefs.remove("userName");
     prefs.remove("email");
     prefs.remove("token");
-    navigateScreen();
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+        NewLoginPage(data: null,)), (Route<dynamic> route) => false);
   }
   navigateScreen() {
     Future.delayed(Duration.zero, () async {
       Future.delayed(Duration.zero, () async {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-            NewLoginPage(data: null,)), (Route<dynamic> route) => false);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+            NewLoginPage(data: null,)));
       });
     });
   }
