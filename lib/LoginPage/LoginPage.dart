@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginBloc.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginModel/LoginModel.dart';
@@ -12,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as JSON;
 
 class loginpage extends StatefulWidget {
   Data data;
@@ -68,6 +73,43 @@ class _loginpageState extends State<loginpage> {
   void signOutGoogle() async{
     await googleSignIn.signOut();
 
+    print("User Sign Out");
+  }
+
+  Future<void> faceBookLogin() async{
+    final facebookLogin = FacebookLogin();
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    final result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        // _sendTokenToServer(result.accessToken.token);
+        // _showLoggedInUI();
+        print("Success:"+result.accessToken.toString());
+        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${result.accessToken.token}');
+        final profile = JSON.jsonDecode(graphResponse.body);
+        Fluttertoast.showToast(
+            msg: "Hello "+profile["name"],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            timeInSecForIosWeb: 1
+        );
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print("Canceled:"+result.accessToken.toString());
+        // _showCancelledMessage();
+        break;
+      case FacebookLoginStatus.error:
+        print("Error:"+result.errorMessage);
+        // _showErrorOnUI(result.errorMessage);
+        break;
+    }
+    logOutFaceBook(facebookLogin);
+  }
+  logOutFaceBook(FacebookLogin f){
+    f.logOut();
     print("User Sign Out");
   }
 
@@ -263,11 +305,19 @@ class _loginpageState extends State<loginpage> {
                       margin: EdgeInsets.only(top: 50),
                       child: Row(
                         children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.3,
+                          Expanded(
+                            child: Container(
+                            ),
                           ),
-                          Image.asset("images/facebook.png", height: 50, width: 50,),
-                          Spacer(),
+                          InkWell(
+                              onTap: () {
+                                faceBookLogin();
+                              },
+                            child: Padding(
+                              padding: EdgeInsets.only(right:30),
+                              child: Image.asset("images/facebook.png", height: 50, width: 50,),
+                            )
+                          ),
                           InkWell(
                             onTap: () {
                               signInWithGoogle().whenComplete(() {
@@ -277,8 +327,9 @@ class _loginpageState extends State<loginpage> {
                             },
                             child: Image.asset("images/google.png", height: 50, width: 50,)
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.3,
+                          Expanded(
+                            child: Container(
+                            ),
                           ),
                         ],
                       ),
