@@ -33,6 +33,8 @@ class _loginpageState extends State<loginpage> {
   final passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final facebookLogin = FacebookLogin();
+  bool tapped = false;
 
   @override
   void initState() {
@@ -59,14 +61,7 @@ class _loginpageState extends State<loginpage> {
     assert(user.uid == currentUser.uid);
     print("User:"+user.toString());
     // signOutGoogle();
-    Fluttertoast.showToast(
-        msg: "Hello "+user.displayName,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        timeInSecForIosWeb: 1
-    );
+    welcomeToast(user.displayName);
     return 'signInWithGoogle succeeded: $user';
   }
 
@@ -77,7 +72,6 @@ class _loginpageState extends State<loginpage> {
   }
 
   Future<void> faceBookLogin() async{
-    final facebookLogin = FacebookLogin();
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     final result = await facebookLogin.logIn(['email']);
 
@@ -88,14 +82,7 @@ class _loginpageState extends State<loginpage> {
         print("Success:"+result.accessToken.toString());
         final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${result.accessToken.token}');
         final profile = JSON.jsonDecode(graphResponse.body);
-        Fluttertoast.showToast(
-            msg: "Hello "+profile["name"],
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            timeInSecForIosWeb: 1
-        );
+        welcomeToast(profile["name"]);
         break;
       case FacebookLoginStatus.cancelledByUser:
         print("Canceled:"+result.accessToken.toString());
@@ -106,13 +93,23 @@ class _loginpageState extends State<loginpage> {
         // _showErrorOnUI(result.errorMessage);
         break;
     }
-    logOutFaceBook(facebookLogin);
+    // logOutFaceBook();
   }
-  logOutFaceBook(FacebookLogin f){
-    f.logOut();
+  logOutFaceBook(){
+    facebookLogin.logOut();
     print("User Sign Out");
   }
 
+  welcomeToast(String name) {
+    Fluttertoast.showToast(
+        msg: "Hello "+name,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        timeInSecForIosWeb: 1
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -232,8 +229,10 @@ class _loginpageState extends State<loginpage> {
                                 Map body = new Map();
                                 body['email']=emailController.text;
                                 body['password']=passwordController.text;
+                                print("Map:"+body.toString());
                                 _formKey.currentState.reset();
                                 _loginBloc.login(body);
+                                tapped = true;
                               }
                             },
                             child: StreamBuilder<ApiResponse<LoginModel>>(
@@ -256,18 +255,22 @@ class _loginpageState extends State<loginpage> {
                                       print("Case 2");
                                       saveUserData(snapshot.data.data);
                                       navigateScreen(context, snapshot.data.data.name);
+                                      tapped = false;
                                       break;
                                     case Status.ERROR:
                                       print("Case 3");
-                                      Fluttertoast.showToast(
-                                          msg: "Login Failed",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0
-                                      );
+                                      if(tapped){
+                                        Fluttertoast.showToast(
+                                            msg: "Login Failed",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0
+                                        );
+                                        tapped = false;
+                                      }
                                       return Text("Login", style: TextStyle(
                                           fontSize: 15.0,
                                           color: Colors.white
@@ -311,7 +314,9 @@ class _loginpageState extends State<loginpage> {
                           ),
                           InkWell(
                               onTap: () {
-                                faceBookLogin();
+                                faceBookLogin().whenComplete(() {
+                                  logOutFaceBook();
+                                });
                               },
                             child: Padding(
                               padding: EdgeInsets.only(right:30),

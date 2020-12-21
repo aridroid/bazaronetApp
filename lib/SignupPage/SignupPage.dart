@@ -23,6 +23,8 @@ class _SignupPageState extends State<SignupPage> {
   final mobileController = TextEditingController();
   final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool tapped = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,6 +200,7 @@ class _SignupPageState extends State<SignupPage> {
                                 body['name']=nameController.text;
                                 body['password']=passwordController.text;
                                 body['role']="USER";
+                                tapped = true;
                                 _formKey.currentState.reset();
                                 _signupBloc.signUp(body);
                               }
@@ -221,18 +224,22 @@ class _SignupPageState extends State<SignupPage> {
                                     case Status.COMPLETED:
                                       print("Case 2:"+snapshot.data.data.sId);
                                       navigateScreen(context);
+                                      tapped = false;
                                       break;
                                     case Status.ERROR:
                                       print("Case 3");
-                                      Fluttertoast.showToast(
-                                          msg: "Email address and phone number must be unique",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0
-                                      );
+                                      if(tapped){
+                                        Fluttertoast.showToast(
+                                            msg: "Email address and phone number must be unique",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0
+                                        );
+                                        tapped = false;
+                                      }
                                       return Text("Sign Up", style: TextStyle(
                                           fontSize: 15.0,
                                           color: Colors.white

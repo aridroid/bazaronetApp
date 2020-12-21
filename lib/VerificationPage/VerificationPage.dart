@@ -1,31 +1,26 @@
-import 'dart:convert';
-
-import 'package:bazaronet_fresh/HomePage/HomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginBloc.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginModel/LoginModel.dart';
-import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailPage.dart';
-import 'package:bazaronet_fresh/SignupPage/SignupPage.dart';
-import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
 class VerificationPage extends StatefulWidget {
-  Map data;
-  VerificationPage({this.data});
+  Data data;
+  String mobileNumber;
+  VerificationPage({this.data,this.mobileNumber});
   @override
   _VerificationPageState createState() => _VerificationPageState();
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  double _minimumPadding = 5.0;
-  LoginBloc _loginBloc;
   final _formKey = GlobalKey<FormState>();
   final otpController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  int recivedOtp;
 
   BoxDecoration get _pinPutDecoration {
     return BoxDecoration(
@@ -34,9 +29,48 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
+  // verifyPhoneNumber() async {
+  //   print("Start");
+  //   await auth.verifyPhoneNumber(
+  //     phoneNumber: '+91'+widget.mobileNumber,
+  //     timeout: Duration(seconds: 120),
+  //     verificationCompleted: (PhoneAuthCredential credential) async {
+  //       // ANDROID ONLY!
+  //       // Sign the user in (or link) with the auto-generated credential
+  //       await auth.signInWithCredential(credential);
+  //       if(auth.currentUser!=null){
+  //         print("auto verify");
+  //       }
+  //     },
+  //     verificationFailed: (FirebaseAuthException e) {
+  //       if (e.code == 'invalid-phone-number') {
+  //         print('The provided phone number is not valid.');
+  //       }
+  //
+  //       // Handle other errors
+  //     },
+  //     codeSent: (String verificationId, int resendToken) async {
+  //       print("code sent");
+  //       // Update the UI - wait for the user to enter the SMS code
+  //       String smsCode = 'xxx';
+  //
+  //       // Create a PhoneAuthCredential with the code
+  //       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+  //
+  //       // Sign the user in (or link) with the credential
+  //       await auth.signInWithCredential(phoneAuthCredential);
+  //     },
+  //     codeAutoRetrievalTimeout: (String verificationId) {
+  //       // Auto-resolution timed out...
+  //     },
+  //   );
+  //   print("End");
+  // }
+
   @override
   void initState() {
-    _loginBloc = LoginBloc();
+    // verifyPhoneNumber();
+
   }
 
   @override
@@ -126,59 +160,14 @@ class _VerificationPageState extends State<VerificationPage> {
                             color: Color.fromRGBO(239, 121, 57, 1),
                             onPressed: () {
                               if(_formKey.currentState.validate()){
-                                Map body = new Map();
-                                body['code']=otpController.text;
                                 _formKey.currentState.reset();
-                                _loginBloc.login(body);
                               }
                             },
-                            child: StreamBuilder<ApiResponse<LoginModel>>(
-                              stream: _loginBloc.loginStream,
-                              builder:(context, snapshot) {
-                                if(snapshot.hasData)
-                                {
-                                  switch(snapshot.data.status)
-                                  {
-                                    case Status.LOADING:
-                                      print("Case 1");
-                                      print(snapshot);
-                                      return CircularProgressIndicator(
-                                        valueColor: new AlwaysStoppedAnimation<Color>(
-                                          Color.fromRGBO(255, 241, 232, 1),
-                                        ),
-                                      );
-                                      break;
-                                    case Status.COMPLETED:
-                                      print("Case 2");
-                                      saveUserData(snapshot.data.data);
-                                      navigateScreen(context, snapshot.data.data.name);
-                                      break;
-                                    case Status.ERROR:
-                                      print("Case 3");
-                                      Fluttertoast.showToast(
-                                          msg: "Login Failed",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0
-                                      );
-                                      return Text("Verify", style: TextStyle(
-                                          fontSize: 15.0,
-                                          color: Colors.white
-                                      ));
-                                      break;
-                                  }
-                                }
-
-                                return Text("Verify", style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: Colors.white
-                                ),
-                                );
-                              },
-                            ),
+                            child: Text("Verify", style: TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.white
+                              ),
+                            )
                           ),
                         ),
                       ),

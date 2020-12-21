@@ -1,5 +1,6 @@
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/SignupPage/SignupPage.dart';
+import 'package:bazaronet_fresh/VerificationPage/MobileVerificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
@@ -23,7 +24,10 @@ class _NewLoginPageState extends State<NewLoginPage> {
   navigateSignUp() {
     Future.delayed(Duration.zero, () async {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => SignupPage(data: widget.data)));
+          MaterialPageRoute(builder: (context) =>
+              // MobileVerificationPage(data: widget.data)
+              SignupPage(data: widget.data,)
+          ));
     });
   }
 
