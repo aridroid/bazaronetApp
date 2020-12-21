@@ -25,8 +25,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
     Future.delayed(Duration.zero, () async {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) =>
-              // MobileVerificationPage(data: widget.data)
-              SignupPage(data: widget.data,)
+              MobileVerificationPage(data: widget.data)
+              // SignupPage(data: widget.data,)
           ));
     });
   }
