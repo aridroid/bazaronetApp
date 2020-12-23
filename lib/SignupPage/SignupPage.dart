@@ -10,7 +10,8 @@ import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart';
 
 class SignupPage extends StatefulWidget {
   Data data;
-  SignupPage({this.data});
+  String mobileNumber;
+  SignupPage({this.data, this.mobileNumber});
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -338,5 +339,6 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void initState() {
     _signupBloc=SignupBloc();
+    mobileController.text = widget.mobileNumber;
   }
 }

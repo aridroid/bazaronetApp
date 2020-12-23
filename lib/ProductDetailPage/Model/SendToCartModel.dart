@@ -47,6 +47,7 @@ class Product {
   String dateModified;
   int iV;
   Variant selectedVariant;
+  VendorId vendorId;
 
   Product(
       {this.tax,
@@ -69,7 +70,9 @@ class Product {
         this.dateAdded,
         this.dateModified,
         this.iV,
-        this.selectedVariant});
+        this.selectedVariant,
+        this.vendorId
+      });
 
   Product.fromJson(Map<String, dynamic> json) {
     tax = json['tax'];
@@ -97,6 +100,9 @@ class Product {
     iV = json['__v'];
     selectedVariant = json['selectedVariant'] != null
         ? new Variant.fromJson(json['selectedVariant'])
+        : null;
+    vendorId = json['vendor_id'] != null
+        ? new VendorId.fromJson(json['vendor_id'])
         : null;
   }
 
@@ -128,6 +134,9 @@ class Product {
     data['__v'] = this.iV;
     if (this.selectedVariant != null) {
       data['selectedVariant'] = this.selectedVariant.toJson();
+    }
+    if (this.vendorId != null) {
+      data['vendor_id'] = this.vendorId.toJson();
     }
     return data;
   }
@@ -219,6 +228,25 @@ class Variant {
     data['price'] = this.price;
     data['actual_price'] = this.actualPrice;
     data['stock'] = this.stock;
+    return data;
+  }
+}
+
+class VendorId {
+  String sId;
+  String name;
+
+  VendorId({this.sId, this.name});
+
+  VendorId.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
     return data;
   }
 }

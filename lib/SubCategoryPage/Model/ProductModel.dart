@@ -25,6 +25,7 @@ class ProductModel {
 }
 
 class Data {
+  String type;
   int tax;
   List<String> image;
   int shipping;
@@ -40,12 +41,14 @@ class Data {
   int quantity;
   String description;
   List<Variant> variant;
+  VendorId vendorId;
   String dateAdded;
   String dateModified;
   int iV;
 
   Data(
-      {this.tax,
+      {this.type,
+        this.tax,
         this.image,
         this.shipping,
         this.minAmountForFreeShipping,
@@ -60,11 +63,13 @@ class Data {
         this.quantity,
         this.description,
         this.variant,
+        this.vendorId,
         this.dateAdded,
         this.dateModified,
         this.iV});
 
   Data.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
     tax = json['tax'];
     image = json['image'].cast<String>();
     shipping = json['shipping'];
@@ -87,6 +92,9 @@ class Data {
         variant.add(new Variant.fromJson(v));
       });
     }
+    vendorId = json['vendor_id'] != null
+        ? new VendorId.fromJson(json['vendor_id'])
+        : null;
     dateAdded = json['date_added'];
     dateModified = json['date_modified'];
     iV = json['__v'];
@@ -94,6 +102,7 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
     data['tax'] = this.tax;
     data['image'] = this.image;
     data['shipping'] = this.shipping;
@@ -112,6 +121,9 @@ class Data {
     data['description'] = this.description;
     if (this.variant != null) {
       data['variant'] = this.variant.map((v) => v.toJson()).toList();
+    }
+    if (this.vendorId != null) {
+      data['vendor_id'] = this.vendorId.toJson();
     }
     data['date_added'] = this.dateAdded;
     data['date_modified'] = this.dateModified;
@@ -232,6 +244,25 @@ class VariantProperties {
     data['variant_type'] = this.variantType;
     data['variant_value'] = this.variantValue;
     data['variant_class'] = this.variantClass;
+    return data;
+  }
+}
+
+class VendorId {
+  String sId;
+  String name;
+
+  VendorId({this.sId, this.name});
+
+  VendorId.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
     return data;
   }
 }

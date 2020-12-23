@@ -101,7 +101,12 @@ class _productdetailsState extends State<productdetails> {
             price: widget.data.variant[selectedVariant].price,
             stock: widget.data.variant[selectedVariant].stock,
             variantProperties:
-                widget.data.variant[selectedVariant].variantProperties));
+                widget.data.variant[selectedVariant].variantProperties),
+        vendorId: new sendProduct.VendorId(
+            name: widget.data.vendorId.name,
+            sId: widget.data.vendorId.sId
+        )
+    );
 
     // product["product"] = {
     //   "tax": widget.data.tax,
@@ -159,7 +164,7 @@ class _productdetailsState extends State<productdetails> {
             widget.data.variant[selectedVariant].price /
                 widget.data.variant[selectedVariant].actualPrice) *
         100;
-    discount = discount2.toInt();
+    discount = discount2.round();
   }
 
   getuserId() async {
@@ -407,6 +412,23 @@ class _productdetailsState extends State<productdetails> {
                               )),
                         ],
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 2),
+                        child: Row(
+                          children: [
+                            Text("Sold By ",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Colors.blue[800],
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Text(widget.data.vendorId.name, style: TextStyle(
+                                fontSize: 18.0),
+                            ),
+                          ],
+                        ),
+                      ),
                       // getVariants(),
                       Divider(
                         color: Colors.grey,
@@ -436,7 +458,7 @@ class _productdetailsState extends State<productdetails> {
                           IconButton(
                             icon: Icon(
                               Icons.location_on,
-                              color: Colors.lightGreenAccent,
+                              color: Colors.greenAccent,
                             ),
                           ),
                           Text(
@@ -608,7 +630,9 @@ class _productdetailsState extends State<productdetails> {
                       Center(
                         child: Text(
                           "Delivery Available In Your Area",
-                          style: TextStyle(color: Colors.lightGreen),
+                          style: TextStyle(
+                            color: Colors.greenAccent,
+                          ),
                         ),
                       ),
                       Divider(

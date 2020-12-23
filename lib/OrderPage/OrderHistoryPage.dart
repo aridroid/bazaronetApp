@@ -126,7 +126,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                             flex: 8,
                                             child: Container(
                                               padding: EdgeInsets.only(
-                                                  left: 15, top: 10, bottom: 10),
+                                                  left: 15, top: 5, bottom: 5),
                                               child: Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -171,6 +171,24 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                           color: Colors.grey,
                                                           fontSize: 12.0
                                                       ),
+                                                    ),
+                                                    widget.orderedData.products[index].product.vendorId == null ?
+                                                    Container() : Spacer(),
+                                                    widget.orderedData.products[index].product.vendorId == null ?
+                                                    Container() :
+                                                    Row(
+                                                      children: [
+                                                        Text("Sold By ",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              color: Colors.blue[800],
+                                                              fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                        Text(widget.orderedData.products[index].product.vendorId.name, style: TextStyle(
+                                                            fontSize: 15.0),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),

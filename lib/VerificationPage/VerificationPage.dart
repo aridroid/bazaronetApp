@@ -1,4 +1,5 @@
 import 'dart:convert' as JSON;
+import 'package:bazaronet_fresh/SignupPage/SignupPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -242,12 +243,15 @@ class _VerificationPageState extends State<VerificationPage> {
   void success() async{
     Future.delayed(Duration.zero, () async {
       Fluttertoast.showToast(
-          msg: "Success",
+          msg: "OTP Verified",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           timeInSecForIosWeb: 1);
+      Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => SignupPage(data: widget.data, mobileNumber: widget.mobileNumber))
+      );
     });
   }
 }

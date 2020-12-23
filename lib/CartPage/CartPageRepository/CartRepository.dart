@@ -15,6 +15,7 @@ class CartRepository {
   Future<CartPageModel> getCartById(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
+    print("Token:"+token);
     final response = await _helper.getWithHeader('api/cart/'+id, token);
     return CartPageModel.fromJson(response);
   }

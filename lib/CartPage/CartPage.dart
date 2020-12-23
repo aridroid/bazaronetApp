@@ -105,7 +105,7 @@ class _cartState extends State<Cart> {
 
   calculateDiscount(cartData.Data data) {
     double discount2 = (1 - data.product.selectedVariant.price/data.product.selectedVariant.actualPrice)*100;
-    discount = discount2.toInt();
+    discount = discount2.round();
   }
 
   returnFutureList() {
@@ -138,7 +138,7 @@ class _cartState extends State<Cart> {
                       return InkWell(
                         onTap: () {},
                         child: Container(
-                          height: 120.0,
+                          height: 130.0,
                           margin: EdgeInsets.only(
                               top: _minimumPadding,
                               bottom: _minimumPadding,
@@ -438,7 +438,22 @@ class _cartState extends State<Cart> {
                                                 ),
                                               )
                                             ],
-                                          )
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Text("Sold By ",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    color: Colors.blue[800],
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Text(snapshot.data.data[index].product.vendorId.name, style: TextStyle(
+                                                  fontSize: 15.0),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),

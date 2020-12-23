@@ -27,7 +27,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
 
   calculateDiscount(ProductData.Data data) {
     double discount2 = (1 - data.variant[0].price/data.variant[0].actualPrice)*100;
-    discount = discount2.toInt();
+    discount = discount2.round();
   }
 
   @override
@@ -305,7 +305,21 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                         )
                                                                       ],
                                                                     ),
-                                                                    Spacer()
+                                                                    Spacer(),
+                                                                    Row(
+                                                                      children: [
+                                                                        Text("Sold By ",
+                                                                          style: TextStyle(
+                                                                            fontSize: 15.0,
+                                                                            color: Colors.blue[800],
+                                                                            fontWeight: FontWeight.bold
+                                                                          ),
+                                                                        ),
+                                                                        Text(snapshot2.data.data[index].vendorId.name, style: TextStyle(
+                                                                            fontSize: 15.0),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   ],
                                                                 ),
                                                               ),
