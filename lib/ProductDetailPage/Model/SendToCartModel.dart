@@ -48,6 +48,8 @@ class Product {
   int iV;
   Variant selectedVariant;
   VendorId vendorId;
+  String service_date;
+  String service_time;
 
   Product(
       {this.tax,
@@ -71,7 +73,9 @@ class Product {
         this.dateModified,
         this.iV,
         this.selectedVariant,
-        this.vendorId
+        this.vendorId,
+        this.service_date,
+        this.service_time
       });
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -104,6 +108,8 @@ class Product {
     vendorId = json['vendor_id'] != null
         ? new VendorId.fromJson(json['vendor_id'])
         : null;
+    service_date = json['service_date'];
+    service_time = json['service_time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -138,6 +144,8 @@ class Product {
     if (this.vendorId != null) {
       data['vendor_id'] = this.vendorId.toJson();
     }
+    data['service_date']=this.service_date;
+    data['service_time']=this.service_time;
     return data;
   }
 }

@@ -60,10 +60,7 @@ class _HomePageState extends State<HomePage> {
 
   removeValue() async {
     prefs = await SharedPreferences.getInstance();
-    prefs.remove('userId');
-    prefs.remove("userName");
-    prefs.remove("email");
-    prefs.remove("token");
+    prefs.clear();
     Future.delayed(Duration.zero, () async {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
           HomePage.second(selectedIndex: _selectedIndex)), (Route<dynamic> route) => false);

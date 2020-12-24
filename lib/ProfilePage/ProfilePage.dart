@@ -18,6 +18,7 @@ class _ProfileState extends State<Profile> {
   String userId;
   String userName;
   String email;
+  String phone;
   String token;
   bool checkValue;
   bool loading = true;
@@ -31,6 +32,7 @@ class _ProfileState extends State<Profile> {
       userName = prefs.getString("userName");
       email = prefs.getString("email");
       token = prefs.getString("token");
+      phone = prefs.getString('phone');
       loading = false;
       print("In async");
     });
@@ -45,10 +47,7 @@ class _ProfileState extends State<Profile> {
 
   removeValue() async {
     prefs = await SharedPreferences.getInstance();
-    prefs.remove('userId');
-    prefs.remove("userName");
-    prefs.remove("email");
-    prefs.remove("token");
+    prefs.clear();
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
         NewLoginPage(data: null,)), (Route<dynamic> route) => false);
   }

@@ -1,4 +1,5 @@
 import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailPage.dart';
+import 'package:bazaronet_fresh/ServiceDetailPage/ServiceDetailPage.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart' as ProductData;
 import 'package:bazaronet_fresh/SubCategoryPage/Model/SubCategoryModel.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Repository/SubCategoryRepository.dart';
@@ -171,12 +172,24 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                   calculateDiscount(snapshot2.data.data[index]);
                                                   return InkWell(
                                                     onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => productdetails(
-                                                          data: snapshot2.data.data[index],
-                                                        )),
-                                                      );
+                                                      if(snapshot2.data.data[index].category.name == "Service") {
+                                                        Navigator.push(
+                                                            context,
+                                                            // MaterialPageRoute(builder: (context) =>
+                                                            //     productdetails(data: snapshot2.data.data[index]))
+                                                            MaterialPageRoute(builder: (context) =>
+                                                                ServiceDetailPage(data: snapshot2.data.data[index]))
+                                                        );
+                                                      }
+                                                      else {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) =>
+                                                                productdetails(data: snapshot2.data.data[index]))
+                                                            // MaterialPageRoute(builder: (context) =>
+                                                            //     ServiceDetailPage(data: snapshot2.data.data[index]))
+                                                        );
+                                                      }
                                                     },
                                                     child: Container(
                                                       height: 120.0,
@@ -234,94 +247,95 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                       2,
                                                               bottom: _minimumPadding*2,
                                                               left: _minimumPadding),
-                                                              child: Expanded(
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                                  children: [
-                                                                    Text(
-                                                                        snapshot2.data.data[index].name.length > 19 ?
-                                                                        '${snapshot2.data.data[index].name.substring(0,19)}...': snapshot2.data.data[index].name,
-                                                                    style: TextStyle(
-                                                                      fontSize: 15.0
-                                                                    ),),
-                                                                    Spacer(),
-                                                                    Row(
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons.star,
-                                                                          color: Color.fromRGBO(255, 165, 0, 1),
-                                                                          size: 15.0,
-                                                                        ),
-                                                                        Text(
-                                                                          " 4.2",
-                                                                          style: TextStyle(
-                                                                              color: Color.fromRGBO(255, 165, 0, 1),
-                                                                          fontSize: 12.0),
-                                                                        ),
-                                                                        Text(
-                                                                            " 125 Reviews",
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                                children: [
+                                                                  Text(
+                                                                      snapshot2.data.data[index].name.length > 19 ?
+                                                                      '${snapshot2.data.data[index].name.substring(0,19)}...': snapshot2.data.data[index].name,
+                                                                      style: TextStyle(
+                                                                        fontSize: 15.0
+                                                                      ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons.star,
+                                                                        color: Color.fromRGBO(255, 165, 0, 1),
+                                                                        size: 15.0,
+                                                                      ),
+                                                                      Text(
+                                                                        " 4.2",
                                                                         style: TextStyle(
-                                                                          fontSize: 12.0,
-                                                                          color: Colors.grey
-                                                                        ),)
-                                                                      ],
-                                                                    ),
-                                                                    Spacer(),
-                                                                    Row(
-                                                                      children: [
-                                                                        Text("Rs."+snapshot2.data.data[index].variant[0].price.toString()+" ",
-                                                                          style: TextStyle(
-                                                                              fontSize: 15.0,),
-                                                                        ),
-                                                                        Text("Rs."+snapshot2.data.data[index].variant[0].actualPrice.toString(), style: TextStyle(
-                                                                            decoration: TextDecoration.lineThrough,
-                                                                          color: Colors.grey,
-                                                                          fontSize: 15.0),
-                                                                        ),
-                                                                        Text(" "+discount.toString()+"% OFF", style: TextStyle(
                                                                             color: Color.fromRGBO(255, 165, 0, 1),
-                                                                            fontSize: 15.0),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                    Spacer(),
-                                                                    Row(
-                                                                      children: [
-                                                                        Container(
-                                                                          // padding: EdgeInsets.only(right: _minimumPadding*2),
-                                                                          child: Icon(
-                                                                              Icons.airport_shuttle,
-                                                                              size: 20.0,
-                                                                              color: Colors.grey,
-                                                                          ),
+                                                                        fontSize: 12.0),
+                                                                      ),
+                                                                      Text(
+                                                                          " 125 Reviews",
+                                                                      style: TextStyle(
+                                                                        fontSize: 12.0,
+                                                                        color: Colors.grey
+                                                                      ),)
+                                                                    ],
+                                                                  ),
+                                                                  Spacer(),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text("Rs."+snapshot2.data.data[index].variant[0].price.toString()+" ",
+                                                                        style: TextStyle(
+                                                                            fontSize: 15.0,),
+                                                                      ),
+                                                                      Text("Rs."+snapshot2.data.data[index].variant[0].actualPrice.toString(), style: TextStyle(
+                                                                          decoration: TextDecoration.lineThrough,
+                                                                        color: Colors.grey,
+                                                                        fontSize: 15.0),
+                                                                      ),
+                                                                      Text(" "+discount.toString()+"% OFF", style: TextStyle(
+                                                                          color: Color.fromRGBO(255, 165, 0, 1),
+                                                                          fontSize: 15.0),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                  Spacer(),
+                                                                  Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        // padding: EdgeInsets.only(right: _minimumPadding*2),
+                                                                        child: Icon(
+                                                                            Icons.airport_shuttle,
+                                                                            size: 20.0,
+                                                                            color: Colors.grey,
                                                                         ),
-                                                                        Text(" Delivery within 2 hours",
-                                                                          style: TextStyle(
-                                                                              color: Colors.grey,
-                                                                              fontSize: 12.0
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                    Spacer(),
-                                                                    Row(
-                                                                      children: [
-                                                                        Text("Sold By ",
-                                                                          style: TextStyle(
-                                                                            fontSize: 15.0,
-                                                                            color: Colors.blue[800],
-                                                                            fontWeight: FontWeight.bold
-                                                                          ),
+                                                                      ),
+                                                                      Text(" Delivery within 2 hours",
+                                                                        style: TextStyle(
+                                                                            color: Colors.grey,
+                                                                            fontSize: 12.0
                                                                         ),
-                                                                        Text(snapshot2.data.data[index].vendorId.name, style: TextStyle(
-                                                                            fontSize: 15.0),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                  Spacer(),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text("Sold By ",
+                                                                        style: TextStyle(
+                                                                          fontSize: 15.0,
+                                                                          color: Colors.blue[800],
+                                                                          fontWeight: FontWeight.bold
                                                                         ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
+                                                                      ),
+                                                                      Text(snapshot2.data.data[index].vendorId.name.length > 19 ?
+                                                                      '${snapshot2.data.data[index].vendorId.name.substring(0,19)}...': snapshot2.data.data[index].vendorId.name,
+                                                                        style: TextStyle(
+                                                                          fontSize: 15.0),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                             Expanded(

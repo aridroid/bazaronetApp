@@ -24,6 +24,7 @@ class _cartState extends State<Cart> {
   String token;
   String userName;
   String email;
+  String phone;
   bool CheckValue = false;
   bool checkOutButtonState = false;
   SharedPreferences prefs;
@@ -74,6 +75,7 @@ class _cartState extends State<Cart> {
     token = prefs.getString('token');
     userName = prefs.getString('userName');
     email = prefs.getString('email');
+    phone = prefs.getString('phone');
     // print("Token:"+token);
     // cartModel = _cartRepository.getCartById(userId);
     setLoading();
@@ -193,269 +195,269 @@ class _cartState extends State<Cart> {
                                             2,
                                         bottom: _minimumPadding*2,
                                         left: _minimumPadding),
-                                    child: Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                snapshot.data.data[index].product.name.length > 19 ?
-                                                '${snapshot.data.data[index].product.name.substring(0,19)}...': snapshot.data.data[index].product.name,
-                                                style: TextStyle(
-                                                    fontSize: 15.0
-                                                ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              snapshot.data.data[index].product.name.length > 19 ?
+                                              '${snapshot.data.data[index].product.name.substring(0,19)}...': snapshot.data.data[index].product.name,
+                                              style: TextStyle(
+                                                  fontSize: 15.0
                                               ),
-                                              Spacer(),
-                                              InkWell(
-                                                onTap: () {
-                                                  deletedItem = index;
-                                                  _deleteProductBloc.deleteCartById(snapshot.data.data[index].sId);
-                                                },
-                                                child: StreamBuilder<ApiResponse>(
-                                                  stream: _deleteProductBloc.deleteProductStream,
-                                                  builder:(context, snapshot3) {
-                                                    if(snapshot3.hasData)
+                                            ),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                deletedItem = index;
+                                                _deleteProductBloc.deleteCartById(snapshot.data.data[index].sId);
+                                              },
+                                              child: StreamBuilder<ApiResponse>(
+                                                stream: _deleteProductBloc.deleteProductStream,
+                                                builder:(context, snapshot3) {
+                                                  if(snapshot3.hasData)
+                                                  {
+                                                    switch(snapshot3.data.status)
                                                     {
-                                                      switch(snapshot3.data.status)
-                                                      {
-                                                        case Status.LOADING:
-                                                          print("Case 1:Index"+index.toString());
-                                                          print(snapshot3);
-                                                          if(index == deletedItem){
-                                                            return Center(
-                                                              child: CircularProgressIndicator(
-                                                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                                                  Color.fromRGBO(255, 241, 232, 1),
-                                                                ),
+                                                      case Status.LOADING:
+                                                        print("Case 1:Index"+index.toString());
+                                                        print(snapshot3);
+                                                        if(index == deletedItem){
+                                                          return Center(
+                                                            child: CircularProgressIndicator(
+                                                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                                                Color.fromRGBO(255, 241, 232, 1),
                                                               ),
-                                                            );
-                                                          }
-                                                          break;
-                                                        case Status.COMPLETED:
-                                                          if(index == deletedItem){
-                                                            print("Case 2:Index"+index.toString());
-                                                            reload(selectedItem);
-                                                          }
-                                                          return Padding(
-                                                            padding: EdgeInsets.only(right: 5.0),
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              color: Colors.grey,
                                                             ),
                                                           );
-                                                          break;
-                                                        case Status.ERROR:
-                                                          print("Case 3");
-                                                          print(snapshot3);
-                                                          Fluttertoast.showToast(
-                                                              msg: "Failed",
-                                                              toastLength: Toast.LENGTH_SHORT,
-                                                              gravity: ToastGravity.CENTER,
-                                                              timeInSecForIosWeb: 1,
-                                                              backgroundColor: Colors.red,
-                                                              textColor: Colors.white,
-                                                              fontSize: 16.0
-                                                          );
-                                                          return Padding(
-                                                            padding: EdgeInsets.only(right: 5.0),
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              color: Colors.grey,
-                                                            ),
-                                                          );
-                                                          break;
-                                                      }
+                                                        }
+                                                        break;
+                                                      case Status.COMPLETED:
+                                                        if(index == deletedItem){
+                                                          print("Case 2:Index"+index.toString());
+                                                          reload(selectedItem);
+                                                        }
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(right: 5.0),
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        );
+                                                        break;
+                                                      case Status.ERROR:
+                                                        print("Case 3");
+                                                        print(snapshot3);
+                                                        Fluttertoast.showToast(
+                                                            msg: "Failed",
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.CENTER,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.red,
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0
+                                                        );
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(right: 5.0),
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        );
+                                                        break;
                                                     }
+                                                  }
 
-                                                    return Padding(
-                                                      padding: EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
+                                                  return Padding(
+                                                    padding: EdgeInsets.only(right: 5.0),
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  );
+                                                },
                                               ),
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.star,
-                                                color: Color.fromRGBO(255, 165, 0, 1),
-                                                size: 15.0,
-                                              ),
-                                              Text(
-                                                " 4.2",
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(255, 165, 0, 1),
-                                                    fontSize: 12.0),
-                                              ),
-                                              Text(
-                                                " 125 Reviews",
-                                                style: TextStyle(
-                                                    fontSize: 12.0,
-                                                    color: Colors.grey
-                                                ),)
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Text("Rs."+snapshot.data.data[index].product.selectedVariant.price.toString()+" ",
-                                                style: TextStyle(
-                                                  fontSize: 15.0,),),
-                                              Text(" Rs."+snapshot.data.data[index].product.selectedVariant.actualPrice.toString(), style: TextStyle(
-                                                  decoration: TextDecoration.lineThrough,
-                                                  color: Colors.grey,
-                                                  fontSize: 15.0),),
-                                              Text(" "+discount.toString()+"% OFF", style: TextStyle(
+                                            ),
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star,
+                                              color: Color.fromRGBO(255, 165, 0, 1),
+                                              size: 15.0,
+                                            ),
+                                            Text(
+                                              " 4.2",
+                                              style: TextStyle(
                                                   color: Color.fromRGBO(255, 165, 0, 1),
-                                                  fontSize: 15.0),
-                                              )
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                // padding: EdgeInsets.only(right: _minimumPadding*2),
-                                                child: Icon(
-                                                  Icons.airport_shuttle,
-                                                  size: 20.0,
+                                                  fontSize: 12.0),
+                                            ),
+                                            Text(
+                                              " 125 Reviews",
+                                              style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.grey
+                                              ),)
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Text("Rs."+snapshot.data.data[index].product.selectedVariant.price.toString()+" ",
+                                              style: TextStyle(
+                                                fontSize: 15.0,),),
+                                            Text(" Rs."+snapshot.data.data[index].product.selectedVariant.actualPrice.toString(), style: TextStyle(
+                                                decoration: TextDecoration.lineThrough,
+                                                color: Colors.grey,
+                                                fontSize: 15.0),),
+                                            Text(" "+discount.toString()+"% OFF", style: TextStyle(
+                                                color: Color.fromRGBO(255, 165, 0, 1),
+                                                fontSize: 15.0),
+                                            )
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              // padding: EdgeInsets.only(right: _minimumPadding*2),
+                                              child: Icon(
+                                                Icons.airport_shuttle,
+                                                size: 20.0,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Text(" Delivery within 2 hours",
+                                              style: TextStyle(
                                                   color: Colors.grey,
-                                                ),
+                                                  fontSize: 12.0
                                               ),
-                                              Text(" Delivery within 2 hours",
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12.0
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              InkWell(
-                                                onTap: () {
-                                                  if(snapshot.data.data[index].quantity == 1){
-                                                    alert();
-                                                  }
-                                                  else{
-                                                    Map body = new Map();
-                                                    body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
-                                                    selectedItem = index;
-                                                    _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
-                                                    updateCart("minus", index);
-                                                  }
-                                                },
-                                                child:
-                                                Icon(
-                                                  Icons.remove_circle_outline,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Container(
-                                                child: StreamBuilder<ApiResponse<UpdateCartModel>>(
-                                                  stream: _cartBloc.cartPageStream,
-                                                  builder:(context, snapshot2) {
-                                                    if(snapshot2.hasData)
-                                                    {
-                                                      switch(snapshot2.data.status)
-                                                      {
-                                                        case Status.LOADING:
-                                                          print("Case 1");
-                                                          print(snapshot2);
-                                                          if(index == selectedItem){
-                                                            return Center(
-                                                              child: CircularProgressIndicator(
-                                                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                                                  Color.fromRGBO(255, 241, 232, 1),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          }
-                                                          break;
-                                                        case Status.COMPLETED:
-                                                          if(index == selectedItem){
-                                                            reload(selectedItem);
-                                                          }
-                                                          return Text(
-                                                            _quantityController[index].toString(),
-                                                            style: TextStyle(
-                                                                color: Colors.black
-                                                            ),
-                                                          );
-                                                          break;
-                                                        case Status.ERROR:
-                                                          print("Case 3");
-                                                          print(snapshot2);
-                                                          Fluttertoast.showToast(
-                                                              msg: "Failed",
-                                                              toastLength: Toast.LENGTH_SHORT,
-                                                              gravity: ToastGravity.CENTER,
-                                                              timeInSecForIosWeb: 1,
-                                                              backgroundColor: Colors.red,
-                                                              textColor: Colors.white,
-                                                              fontSize: 16.0
-                                                          );
-                                                          return Text(
-                                                            _quantityController[index].toString(),
-                                                            style: TextStyle(
-                                                                color: Colors.black
-                                                            ),
-                                                          );
-                                                          break;
-                                                      }
-                                                    }
-
-                                                    return Text(
-                                                      snapshot.data.data[index].quantity.toString(),
-                                                      style: TextStyle(
-                                                          color: Colors.black
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              InkWell(
-                                                onTap: () {
+                                            ),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                if(snapshot.data.data[index].quantity == 1){
+                                                  alert();
+                                                }
+                                                else{
                                                   Map body = new Map();
-                                                  body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
+                                                  body['quantity'] = (snapshot.data.data[index].quantity -1).toString();
                                                   selectedItem = index;
                                                   _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
-                                                  updateCart("plus", index);
+                                                  updateCart("minus", index);
+                                                }
+                                              },
+                                              child:
+                                              Icon(
+                                                Icons.remove_circle_outline,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              child: StreamBuilder<ApiResponse<UpdateCartModel>>(
+                                                stream: _cartBloc.cartPageStream,
+                                                builder:(context, snapshot2) {
+                                                  if(snapshot2.hasData)
+                                                  {
+                                                    switch(snapshot2.data.status)
+                                                    {
+                                                      case Status.LOADING:
+                                                        print("Case 1");
+                                                        print(snapshot2);
+                                                        if(index == selectedItem){
+                                                          return Center(
+                                                            child: CircularProgressIndicator(
+                                                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                                                Color.fromRGBO(255, 241, 232, 1),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                        break;
+                                                      case Status.COMPLETED:
+                                                        if(index == selectedItem){
+                                                          reload(selectedItem);
+                                                        }
+                                                        return Text(
+                                                          _quantityController[index].toString(),
+                                                          style: TextStyle(
+                                                              color: Colors.black
+                                                          ),
+                                                        );
+                                                        break;
+                                                      case Status.ERROR:
+                                                        print("Case 3");
+                                                        print(snapshot2);
+                                                        Fluttertoast.showToast(
+                                                            msg: "Failed",
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.CENTER,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.red,
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0
+                                                        );
+                                                        return Text(
+                                                          _quantityController[index].toString(),
+                                                          style: TextStyle(
+                                                              color: Colors.black
+                                                          ),
+                                                        );
+                                                        break;
+                                                    }
+                                                  }
+
+                                                  return Text(
+                                                    snapshot.data.data[index].quantity.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.black
+                                                    ),
+                                                  );
                                                 },
-                                                child: Container(
-                                                  padding: EdgeInsets.only(right: _minimumPadding),
-                                                  child: Icon(
-                                                    Icons.add_circle_outline,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Text("Sold By ",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    color: Colors.blue[800],
-                                                    fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                Map body = new Map();
+                                                body['quantity'] = (snapshot.data.data[index].quantity +1).toString();
+                                                selectedItem = index;
+                                                _cartBloc.updateCartById(body, snapshot.data.data[index].sId);
+                                                updateCart("plus", index);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(right: _minimumPadding),
+                                                child: Icon(
+                                                  Icons.add_circle_outline,
+                                                  color: Colors.grey,
                                                 ),
                                               ),
-                                              Text(snapshot.data.data[index].product.vendorId.name, style: TextStyle(
+                                            )
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Text("Sold By ",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.blue[800],
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                            Text(snapshot.data.data[index].product.vendorId.name.length > 19 ?
+                                            '${snapshot.data.data[index].product.vendorId.name.substring(0,19)}...': snapshot.data.data[index].product.vendorId.name,
+                                              style: TextStyle(
                                                   fontSize: 15.0),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -542,69 +544,67 @@ class _cartState extends State<Cart> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
           ),
-          child: Expanded(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 5,
-                ),
-                returnFutureList(),
-                Divider(),
-                Container(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Total Amount",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "Rs."+cost.toString(),
-                              style: TextStyle(
-                                  color: Colors.yellow[800],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            Text(
-                              "View Price Details",
-                              style:
-                                  TextStyle(color: Colors.blue, fontSize: 15),
-                            ),
-                          ],
+          child: Column(
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              returnFutureList(),
+              Divider(),
+              Container(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Total Amount",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Rs."+cost.toString(),
+                            style: TextStyle(
+                                color: Colors.yellow[800],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          Text(
+                            "View Price Details",
+                            style:
+                                TextStyle(color: Colors.blue, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .50,
+                      decoration: BoxDecoration(
+                        color: Colors.yellow[800],
+                        borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(40.0),
+                          topRight: const Radius.circular(40.0),
+                          bottomLeft: const Radius.circular(40.0),
+                          bottomRight: const Radius.circular(40.0),
                         ),
                       ),
-                      Spacer(),
-                      Container(
-                        width: MediaQuery.of(context).size.width * .50,
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[800],
-                          borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(40.0),
-                            topRight: const Radius.circular(40.0),
-                            bottomLeft: const Radius.circular(40.0),
-                            bottomRight: const Radius.circular(40.0),
-                          ),
+                      child: FlatButton(
+                        onPressed: checkOutButtonState ? navigateToAddressPage : null,
+                        child: Text(
+                          "CheckOut",
+                          style: TextStyle(color: Colors.white),
                         ),
-                        child: FlatButton(
-                          onPressed: checkOutButtonState ? navigateToAddressPage : null,
-                          child: Text(
-                            "CheckOut",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       );
@@ -650,7 +650,7 @@ class _cartState extends State<Cart> {
       id: userId,
       name: userName,
       email: email,
-      phone: "+917278682875"
+      phone: "+91"+phone
     );
     generateProducts();
     product["products"] = orderedProducts;

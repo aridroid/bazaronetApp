@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/Model/SendToCartModel.dart'
-    as sendProduct;
+as sendProduct;
 import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailBloc.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart'
-    as productData;
+as productData;
 import 'package:bazaronet_fresh/VerificationPage/VerificationPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
@@ -17,20 +16,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class productdetails extends StatefulWidget {
+// ignore: must_be_immutable
+class ServiceDetailPage extends StatefulWidget {
   productData.Data data;
-  productdetails({this.data}){
+  ServiceDetailPage({this.data}){
     print("Product Detail Page:"+data.toString());
   }
   @override
-  _productdetailsState createState() => _productdetailsState();
+  _ServiceDetailPageState createState() => _ServiceDetailPageState();
 }
 
-class _productdetailsState extends State<productdetails> {
+class _ServiceDetailPageState extends State<ServiceDetailPage> {
   double _minimumPadding = 5.0;
   bool isOpen = true;
   String userId;
@@ -41,7 +41,27 @@ class _productdetailsState extends State<productdetails> {
   int selectedVariant = 0;
   List<productData.Variant> variantList;
   Map product = new Map();
+  int dateIndex;
+  String selectedDate;
+  String selectedTime;
+  int timeIndex;
   bool tapped = false;
+  List<String> times = [
+    '9:00 am',
+    '10:00 am',
+    '11:00 am',
+    '12:00 pm',
+    '1:00 pm',
+    '2:00 pm',
+    '3:00 pm',
+    '4:00 pm',
+    '5:00 pm',
+    '6:00 pm',
+    '7:00 pm',
+    '8:00 pm',
+    '9:00 pm',
+  ];
+
   @override
   void initState() {
     calculateDiscount();
@@ -92,7 +112,7 @@ class _productdetailsState extends State<productdetails> {
             price: widget.data.variant[selectedVariant].price,
             stock: widget.data.variant[selectedVariant].stock,
             variantProperties:
-                widget.data.variant[selectedVariant].variantProperties),
+            widget.data.variant[selectedVariant].variantProperties),
         dateAdded: widget.data.dateAdded,
         dateModified: widget.data.dateModified,
         iV: widget.data.iV,
@@ -102,11 +122,13 @@ class _productdetailsState extends State<productdetails> {
             price: widget.data.variant[selectedVariant].price,
             stock: widget.data.variant[selectedVariant].stock,
             variantProperties:
-                widget.data.variant[selectedVariant].variantProperties),
+            widget.data.variant[selectedVariant].variantProperties),
         vendorId: new sendProduct.VendorId(
             name: widget.data.vendorId.name,
             sId: widget.data.vendorId.sId
-        )
+        ),
+        service_date: selectedDate,
+        service_time: selectedTime
     );
 
     // product["product"] = {
@@ -162,8 +184,8 @@ class _productdetailsState extends State<productdetails> {
 
   calculateDiscount() {
     double discount2 = (1 -
-            widget.data.variant[selectedVariant].price /
-                widget.data.variant[selectedVariant].actualPrice) *
+        widget.data.variant[selectedVariant].price /
+            widget.data.variant[selectedVariant].actualPrice) *
         100;
     discount = discount2.round();
   }
@@ -246,9 +268,11 @@ class _productdetailsState extends State<productdetails> {
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0), border: Border.all(
-            color: Colors.grey
-        )),
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: Colors.grey
+            )
+        ),
         child: DropdownButtonHideUnderline(
           child: new DropdownButton(
             // icon: Icon(Icons.arrow_drop_down),
@@ -271,7 +295,6 @@ class _productdetailsState extends State<productdetails> {
             }).toList(),
             onChanged: (String value) {
               selectedVariant = int.parse(value);
-              sendToCartProduct();
               calculateDiscount();
               setState(() {});
             },
@@ -338,17 +361,17 @@ class _productdetailsState extends State<productdetails> {
                         children: [
                           Expanded(
                               child: Container(
-                            padding: EdgeInsets.only(
-                                top: _minimumPadding,
-                                left: _minimumPadding * 2),
-                            child: Text(
-                              widget.data.name,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          )),
+                                padding: EdgeInsets.only(
+                                    top: _minimumPadding,
+                                    left: _minimumPadding * 2),
+                                child: Text(
+                                  widget.data.name,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              )),
                           IconButton(
                             alignment: Alignment.topRight,
                             icon: Icon(Icons.favorite_border),
@@ -438,7 +461,7 @@ class _productdetailsState extends State<productdetails> {
                       ),
                       Container(
                         padding:
-                            EdgeInsets.only(left: 10.0, top: 5.0, bottom: 10.0),
+                        EdgeInsets.only(left: 10.0, top: 5.0, bottom: 10.0),
                         child: Text(
                           "Select Variant",
                           style: TextStyle(color: Colors.grey, fontSize: 15.0),
@@ -448,218 +471,139 @@ class _productdetailsState extends State<productdetails> {
                       Divider(
                         color: Colors.grey,
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Text("Check Delivery Availability"),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.location_on,
-                              color: Colors.greenAccent,
-                            ),
-                          ),
-                          Text(
-                            "Elgin Road,700063",
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                          ),
-                          Spacer(),
-                          ButtonTheme(
-                            height: 30.0,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Colors.black,
-                                    width: 1,
-                                    style: BorderStyle.solid),
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                              child: Text(
-                                "Change",
-                              ),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                    ),
-                                    builder: (builder) {
-                                      return Container(
-                                        padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom,
-                                        ),
-                                        decoration: BoxDecoration(
-                                            borderRadius: new BorderRadius.only(
-                                                topLeft:
-                                                    const Radius.circular(25.0),
-                                                topRight: const Radius.circular(
-                                                    25.0))),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.close,
-                                                    size: 30.0,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Text(
-                                                    "Use Pincode To Check Delivery Info",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 15),
-                                                    height: 45,
-                                                    width: 250,
-                                                    child: TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        hintText:
-                                                            'Enter Pincode',
-                                                        border:
-                                                            new OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )),
-                                                Container(
-                                                  margin:
-                                                      EdgeInsets.only(left: 10),
-                                                  height: 45,
-                                                  width: 80,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.yellow[700],
-                                                      borderRadius:
-                                                          new BorderRadius.only(
-                                                        bottomRight:
-                                                            Radius.circular(10),
-                                                        bottomLeft:
-                                                            Radius.circular(10),
-                                                        topLeft:
-                                                            Radius.circular(10),
-                                                        topRight:
-                                                            Radius.circular(10),
-                                                      )),
-                                                  child: FlatButton(
-                                                    child: Text(
-                                                      "Check",
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                "or",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 30,
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  left: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.25,
-                                                  bottom: _minimumPadding * 2),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.gps_fixed,
-                                                    color: Colors.blue,
-                                                  ),
-                                                  Text(
-                                                    "Use my current location",
-                                                    style: TextStyle(
-                                                        color: Colors.blue,
-                                                        fontSize: 18),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Center(
+
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
                         child: Text(
-                          "Delivery Available In Your Area",
+                          "When would you like your service?",
                           style: TextStyle(
-                            color: Colors.greenAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
                           ),
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey,
+
+                      Container(
+                        height: 70.0,
+                        margin: EdgeInsets.only(
+                            top: _minimumPadding, bottom: _minimumPadding, right: _minimumPadding*2, left: _minimumPadding*2),
+                        child: ListView.builder(
+                            itemCount: 7,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder:
+                                (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    dateIndex = index;
+                                    selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now().add(Duration(days: index)));
+                                    print("Selected Date:"+selectedDate);
+                                  });
+                                },
+                                child: Container(
+                                  width: 75,
+                                  decoration: BoxDecoration(
+                                    color: dateIndex == index? Color.fromRGBO(194, 206, 255, 1) : Colors.white,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      right: _minimumPadding*2,
+                                      top: _minimumPadding,
+                                      bottom: _minimumPadding
+                                  ),
+                                  child: Card(
+                                    margin: EdgeInsets.zero,
+                                    elevation: 0.0,
+                                    color: dateIndex == index? Color.fromRGBO(194, 206, 255, 1) : Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      side: BorderSide(
+                                        color: dateIndex == index? Color.fromRGBO(91, 108, 255, 1) : Colors.grey,
+                                        width: 1.0
+                                      )
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                            flex: 2,
+                                            child: Center(
+                                              child: Text(
+                                                  DateFormat('EEE').format(DateTime.now().add(Duration(days: index))),
+                                                  style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    color: dateIndex == index? Color.fromRGBO(91, 108, 255, 1) : Colors.grey
+                                                  ),
+                                              ),
+                                            )
+                                        ),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Center(
+                                              child: Text(
+                                                  DateFormat("dd").format(DateTime.now().add(Duration(days: index))),
+                                                  style: TextStyle(
+                                                      fontSize: 18.0,
+                                                    color: dateIndex == index? Color.fromRGBO(91, 108, 255, 1) : Colors.black
+                                                  ),
+                                              ),
+                                            ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                            child: Icon(
-                              Icons.airport_shuttle,
-                              color: Colors.yellow[700],
-                            ),
+
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          itemCount: times.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 3
                           ),
-                          Text(
-                            "Eligible For Fast Delivery In 1 Day",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 12.0),
-                          )
-                        ],
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  timeIndex = index;
+                                  selectedTime = times[index];
+                                });
+                              },
+                              child: Container(
+                                child: Card(
+                                  margin: EdgeInsets.zero,
+                                  elevation: 0.0,
+                                    color: timeIndex == index? Color.fromRGBO(194, 206, 255, 1) : Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                        side: BorderSide(
+                                            color: timeIndex == index? Color.fromRGBO(91, 108, 255, 1) : Colors.grey,
+                                            width: 1.0
+                                        )
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        times[index],
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: timeIndex == index? Color.fromRGBO(91, 108, 255, 1) : Colors.black
+                                        ),
+                                      ),
+                                    )
+                                  // ignore: dead_code
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+
                       Row(
                         children: [
                           Padding(
@@ -677,15 +621,15 @@ class _productdetailsState extends State<productdetails> {
                             color: Colors.white,
                             child: !isOpen
                                 ? Text(
-                                    "All Details",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  )
+                              "All Details",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            )
                                 : Icon(
-                                    Icons.arrow_drop_up,
-                                    size: 30.0,
-                                  ),
+                              Icons.arrow_drop_up,
+                              size: 30.0,
+                            ),
                           ),
                         ],
                       ),
@@ -756,19 +700,32 @@ class _productdetailsState extends State<productdetails> {
                         color: Color.fromRGBO(239, 121, 57, 1),
                         onPressed: () {
                           if (CheckValue) {
-                            tapped = true;
-                            Map body = new Map();
-                            body['customer_id'] = userId;
-                            body['quantity'] = "1";
-                            body['product'] = jsonEncode(product['product']);
-                            _productDetailBloc.addToCart(product);
+                            if(timeIndex != null && dateIndex != null){
+                              tapped = true;
+                              sendToCartProduct();
+                              Map body = new Map();
+                              body['customer_id'] = userId;
+                              body['quantity'] = "1";
+                              body['product'] = jsonEncode(product['product']);
+                              _productDetailBloc.addToCart(product);
+                            }
+                            else {
+                              Fluttertoast.showToast(
+                                  msg: "Select Date and Time",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
                           } else {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => NewLoginPage(
-                                          data: widget.data,
-                                        ))
+                                      data: widget.data,
+                                    ))
                             );
                           }
                         },
@@ -787,7 +744,7 @@ class _productdetailsState extends State<productdetails> {
                                   );
                                   break;
                                 case Status.COMPLETED:
-                                  // navigateScreen(context);
+                                // navigateScreen(context);
                                   if(tapped) {
                                     successAlert();
                                   }
@@ -826,14 +783,14 @@ class _productdetailsState extends State<productdetails> {
                     child: ButtonTheme(
                       height: 50,
                       child: RaisedButton(
-                        color: Colors.white54,
-                        onPressed: () {
-                          navigateScreen(context);
-                        },
-                        child:
-                        Text("Go To Cart",
-                            style: TextStyle(fontSize: 15)
-                        )
+                          color: Colors.white54,
+                          onPressed: () {
+                            navigateScreen(context);
+                          },
+                          child:
+                          Text("Go To Cart",
+                              style: TextStyle(fontSize: 15)
+                          )
                       ),
                     ),
                   ),
@@ -860,14 +817,18 @@ class _productdetailsState extends State<productdetails> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage.second(selectedIndex: 2)));
+              builder: (context) => HomePage.second(selectedIndex: 2)
+          )
+      );
     } else {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => NewLoginPage(
                 data: widget.data,
-              )));
+              )
+          )
+      );
     }
   }
 

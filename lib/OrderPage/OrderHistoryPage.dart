@@ -18,7 +18,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   calculateDiscount(Variant data) {
     double discount2 = (1 - data.price/data.actualPrice)*100;
-    discount = discount2.toInt();
+    discount = discount2.round();
   }
 
   @override
@@ -127,71 +127,71 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                             child: Container(
                                               padding: EdgeInsets.only(
                                                   left: 15, top: 5, bottom: 5),
-                                              child: Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      widget.orderedData.products[index].product.name.length > 19 ?
-                                                      '${widget.orderedData.products[index].product.name.substring(0,19)}...':
-                                                      widget.orderedData.products[index].product.name,
-                                                      style: TextStyle(
-                                                          fontSize: 15.0
-                                                      ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    widget.orderedData.products[index].product.name.length > 19 ?
+                                                    '${widget.orderedData.products[index].product.name.substring(0,19)}...':
+                                                    widget.orderedData.products[index].product.name,
+                                                    style: TextStyle(
+                                                        fontSize: 15.0
                                                     ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        Text("Rs."+widget.orderedData.products[index].product.variant.price.toString()+" ",
-                                                          style: TextStyle(
-                                                            fontSize: 15.0,),
-                                                        ),
-                                                        Text("Rs."+widget.orderedData.products[index].product.variant.actualPrice.toString(), style: TextStyle(
-                                                            decoration: TextDecoration.lineThrough,
-                                                            color: Colors.grey,
-                                                            fontSize: 15.0),
-                                                        ),
-                                                        Text(" "+discount.toString()+"% OFF", style: TextStyle(
-                                                            color: Color.fromRGBO(255, 165, 0, 1),
-                                                            fontSize: 15.0),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Spacer(),
-                                                    Text("Quantity "+widget.orderedData.products[index].quantity.toString(),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      Text("Rs."+widget.orderedData.products[index].product.variant.price.toString()+" ",
                                                         style: TextStyle(
-                                                          fontSize: 15.0,
+                                                          fontSize: 15.0,),
                                                       ),
-                                                    ),
-                                                    Spacer(),
-                                                    Text("Delivery expected by Sep 16th",
-                                                      style: TextStyle(
+                                                      Text("Rs."+widget.orderedData.products[index].product.variant.actualPrice.toString(), style: TextStyle(
+                                                          decoration: TextDecoration.lineThrough,
                                                           color: Colors.grey,
-                                                          fontSize: 12.0
+                                                          fontSize: 15.0),
                                                       ),
+                                                      Text(" "+discount.toString()+"% OFF", style: TextStyle(
+                                                          color: Color.fromRGBO(255, 165, 0, 1),
+                                                          fontSize: 15.0),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Spacer(),
+                                                  Text("Quantity "+widget.orderedData.products[index].quantity.toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 15.0,
                                                     ),
-                                                    widget.orderedData.products[index].product.vendorId == null ?
-                                                    Container() : Spacer(),
-                                                    widget.orderedData.products[index].product.vendorId == null ?
-                                                    Container() :
-                                                    Row(
-                                                      children: [
-                                                        Text("Sold By ",
-                                                          style: TextStyle(
-                                                              fontSize: 15.0,
-                                                              color: Colors.blue[800],
-                                                              fontWeight: FontWeight.bold
-                                                          ),
+                                                  ),
+                                                  Spacer(),
+                                                  Text("Delivery expected by Sep 16th",
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 12.0
+                                                    ),
+                                                  ),
+                                                  widget.orderedData.products[index].product.vendorId == null ?
+                                                  Container() : Spacer(),
+                                                  widget.orderedData.products[index].product.vendorId == null ?
+                                                  Container() :
+                                                  Row(
+                                                    children: [
+                                                      Text("Sold By ",
+                                                        style: TextStyle(
+                                                            fontSize: 15.0,
+                                                            color: Colors.blue[800],
+                                                            fontWeight: FontWeight.bold
                                                         ),
-                                                        Text(widget.orderedData.products[index].product.vendorId.name, style: TextStyle(
+                                                      ),
+                                                      Text(widget.orderedData.products[index].product.vendorId.name.length > 19 ?
+                                                      '${widget.orderedData.products[index].product.vendorId.name.substring(0,19)}...': widget.orderedData.products[index].product.vendorId.name,
+                                                        style: TextStyle(
                                                             fontSize: 15.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           )

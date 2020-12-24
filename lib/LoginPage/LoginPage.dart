@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bazaronet_fresh/LoginPage/LoginBloc.dart';
@@ -194,6 +195,8 @@ class _loginpageState extends State<loginpage> {
                               top: _minimumPadding*4),
                           child: TextFormField(
                             controller: passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: true,
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Password field must contain a value';
@@ -368,8 +371,10 @@ class _loginpageState extends State<loginpage> {
   saveUserData(LoginModel data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userId', data.sId);
+    print("Id:"+data.sId);
     prefs.setString('userName', data.name);
     prefs.setString('email', data.email);
     prefs.setString('token', data.token);
+    prefs.setString('phone', data.phone);
   }
 }

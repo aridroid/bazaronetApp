@@ -21,6 +21,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   bool checkValue = false;
   bool loading = true;
   String email;
+  String phone;
   OrderPageRepository _orderPageRepository = OrderPageRepository();
   double screenHeight;
   double screenWidth;
@@ -36,6 +37,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     token = prefs.getString('token');
     userName = prefs.getString('userName');
     email = prefs.getString('email');
+    phone = prefs.getString('phone');
     // print("Token:"+token);
     // cartModel = _cartRepository.getCartById(userId);
     setLoading();
