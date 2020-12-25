@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:bazaronet_fresh/HomePage/Model/BannerModel.dart';
-import 'package:bazaronet_fresh/HomePage/Model/CategoryModel.dart';
+import 'package:bazaronet_fresh/HomePage/Model/CategoryModel.dart' as CategoryModel;
 import 'package:bazaronet_fresh/HomePage/Repository/HomeRepository.dart';
+import 'package:bazaronet_fresh/SubCategoryPage/Model/SubCategoryModel.dart';
+import 'package:bazaronet_fresh/SubCategoryPage/Repository/SubCategoryRepository.dart';
+import 'package:bazaronet_fresh/SubCategoryPage/ServiceSubCategoryPage.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/SubCategoryPage.dart';
 import 'package:bazaronet_fresh/VerificationPage/VerificationPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,12 +38,30 @@ class _HomeState extends State<Home> {
     'Electrician',
     'Plumber',
   ];
-
+  SubCategoryRepository _subCategoryRepository = SubCategoryRepository();
+  bool generate = true;
+  Future<CategoryModel.CategoryModel> allCategories;
+  List<CategoryModel.Data> onlyCategories = new List<CategoryModel.Data>();
+  List<CategoryModel.Data> onlyService = new List<CategoryModel.Data>();
 
   @override
   void initState() {
     _homeRepository = HomeRepository();
     controller = ScrollController();
+    // getDifferentCategories();
+    allCategories = _homeRepository.getCategory();
+  }
+
+  filter(CategoryModel.CategoryModel data) {
+    print("Length:"+data.data.length.toString());
+    for(int i= 0; i< data.data.length; i++) {
+      if(data.data[i].type == "PRODUCT"){
+        onlyCategories.add(data.data[i]);
+      }
+      else {
+        onlyService.add(data.data[i]);
+      }
+    }
   }
 
   @override
@@ -342,10 +363,11 @@ class _HomeState extends State<Home> {
                 margin: EdgeInsets.only(
                     top: _minimumPadding, bottom: _minimumPadding),
                 child:
-                FutureBuilder<CategoryModel>(
-                    future: _homeRepository.getCategory(),
+                FutureBuilder<CategoryModel.CategoryModel>(
+                    future: allCategories,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
+                        print("Case1");
                         return Center(
                           child: CircularProgressIndicator(
                             valueColor: new AlwaysStoppedAnimation<Color>(
@@ -354,9 +376,18 @@ class _HomeState extends State<Home> {
                         );
                       }
                       else if (snapshot.hasData) {
+                        print("Case2");
+                        if(generate){
+                          filter(snapshot.data);
+                          Future.delayed(Duration.zero, () async {
+                            setState(() {
+                              generate = false;
+                            });
+                          });
+                        }
                         return GridView.builder(
                           shrinkWrap: true,
-                          itemCount: snapshot.data.data.length,
+                          itemCount: onlyCategories.length,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
@@ -364,32 +395,31 @@ class _HomeState extends State<Home> {
                               mainAxisSpacing: _minimumPadding,
                           ),
                           itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SubCategoryPage(
-                                              id: snapshot.data
-                                                  .data[index].sId)
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SubCategoryPage(
+                                                id: onlyCategories[index].sId)
                                     ),
-                                    elevation: 5.0,
-                                    child: Image.network(
-                                      'http://139.59.91.150:3333/uploads/'
-                                          + snapshot.data.data[index].image,
-                                      fit: BoxFit.fill,)
-                                  // ignore: dead_code
+                                  );
+                                },
+                                child: Container(
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      elevation: 5.0,
+                                      child: Image.network(
+                                        'http://139.59.91.150:3333/uploads/'
+                                            + onlyCategories[index].image,
+                                        fit: BoxFit.fill,)
+                                    // ignore: dead_code
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
                           },
                         );
                       } else {
@@ -420,67 +450,82 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
+              generate?
               Container(
-                  height: 120.0,
-                  margin: EdgeInsets.only(
-                      top: _minimumPadding, bottom: _minimumPadding, right: _minimumPadding, left: _minimumPadding),
-                  child: ListView.builder(
-                      itemCount: Images.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder:
-                          (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                                borderRadius:
-                                BorderRadius.circular(10),
-                                // image: DecorationImage(
-                                //     image: AssetImage('images/coffeemaker.jpg'),
-                                //     fit: BoxFit.fill)
+                height: 120.0,
+                margin: EdgeInsets.only(
+                    top: _minimumPadding, bottom: _minimumPadding, right: _minimumPadding, left: _minimumPadding),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(
+                        Color.fromRGBO(239, 121, 57, 1)),
+                  ),
+                ),
+              ):
+              FutureBuilder<SubCategoryModel>(
+                  future: _subCategoryRepository.getSubCategory(onlyService[0].sId),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      print("Case1");
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Color.fromRGBO(239, 121, 57, 1)),
+                        ),
+                      );
+                    }
+                    else if (snapshot.hasData) {
+                      print("Case2");
+                      return Container(
+                        height: 120.0,
+                        margin: EdgeInsets.only(
+                            top: _minimumPadding, bottom: _minimumPadding, right: _minimumPadding, left: _minimumPadding),
+                        child: ListView.builder(
+                            itemCount: snapshot.data.data.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder:
+                                (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder:
+                                  (context) => ServiceSubCategoryPage(id: snapshot.data.data[index].sId)
+                                  ));
+                                },
+                                child: Container(
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                    // image: DecorationImage(
+                                    //     image: AssetImage('images/coffeemaker.jpg'),
+                                    //     fit: BoxFit.fill)
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      right: _minimumPadding*2,
+                                      top: _minimumPadding,
+                                      bottom: _minimumPadding
+                                  ),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    elevation: 5.0,
+                                    margin: EdgeInsets.zero,
+                                    child: Image.network(
+                                      'http://139.59.91.150:3333/uploads/'
+                                          + snapshot.data.data[index].image,
+                                      fit: BoxFit.fill)
+                                  ),
                                 ),
-                            margin: EdgeInsets.only(
-                                right: _minimumPadding*2,
-                                top: _minimumPadding,
-                                bottom: _minimumPadding
-                            ),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 5.0,
-                              margin: EdgeInsets.zero,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                      child: Container(
-                                        margin: EdgeInsets.only(
-                                          top: _minimumPadding*4,
-                                          left: _minimumPadding*3,
-                                          right: _minimumPadding*3
-                                        ),
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(Images[index]),
-                                          ),
-                                        ),
-                                      )),
-                                  Expanded(
-                                    flex: 2,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(Names[index]),
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-              ),
+                              );
+                            }),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
+
               InkWell(
                 onTap: () {
 

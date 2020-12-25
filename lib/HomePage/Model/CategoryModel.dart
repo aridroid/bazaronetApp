@@ -25,6 +25,7 @@ class CategoryModel {
 }
 
 class Data {
+  String type;
   bool status;
   String sId;
   String name;
@@ -36,7 +37,8 @@ class Data {
   int iV;
 
   Data(
-      {this.status,
+      {this.type,
+        this.status,
         this.sId,
         this.name,
         this.sortOrder,
@@ -47,6 +49,7 @@ class Data {
         this.iV});
 
   Data.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
     status = json['status'];
     sId = json['_id'];
     name = json['name'];
@@ -60,6 +63,7 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
     data['status'] = this.status;
     data['_id'] = this.sId;
     data['name'] = this.name;

@@ -1,5 +1,5 @@
 import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailPage.dart';
-import 'package:bazaronet_fresh/ServiceDetailPage/ServiceDetailPage.dart';
+import 'package:bazaronet_fresh/ProductDetailPage/ServiceDetailPage.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart' as ProductData;
 import 'package:bazaronet_fresh/SubCategoryPage/Model/SubCategoryModel.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Repository/SubCategoryRepository.dart';
@@ -168,28 +168,17 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                         Expanded(
                                             child: ListView.builder(
                                                 itemCount: snapshot2.data.data.length,
+                                                shrinkWrap: true,
+                                                physics: ScrollPhysics(),
                                                 itemBuilder: (context, index) {
                                                   calculateDiscount(snapshot2.data.data[index]);
                                                   return InkWell(
                                                     onTap: () {
-                                                      if(snapshot2.data.data[index].category.name == "Service") {
-                                                        Navigator.push(
-                                                            context,
-                                                            // MaterialPageRoute(builder: (context) =>
-                                                            //     productdetails(data: snapshot2.data.data[index]))
-                                                            MaterialPageRoute(builder: (context) =>
-                                                                ServiceDetailPage(data: snapshot2.data.data[index]))
-                                                        );
-                                                      }
-                                                      else {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(builder: (context) =>
                                                                 productdetails(data: snapshot2.data.data[index]))
-                                                            // MaterialPageRoute(builder: (context) =>
-                                                            //     ServiceDetailPage(data: snapshot2.data.data[index]))
                                                         );
-                                                      }
                                                     },
                                                     child: Container(
                                                       height: 120.0,
@@ -321,15 +310,15 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                   Spacer(),
                                                                   Row(
                                                                     children: [
-                                                                      Text("Sold By ",
+                                                                      Text("Sold by ",
                                                                         style: TextStyle(
                                                                           fontSize: 15.0,
                                                                           color: Colors.blue[800],
                                                                           fontWeight: FontWeight.bold
                                                                         ),
                                                                       ),
-                                                                      Text(snapshot2.data.data[index].vendorId.name.length > 19 ?
-                                                                      '${snapshot2.data.data[index].vendorId.name.substring(0,19)}...': snapshot2.data.data[index].vendorId.name,
+                                                                      Text(snapshot2.data.data[index].vendorId.name.length > 16 ?
+                                                                      '${snapshot2.data.data[index].vendorId.name.substring(0,16)}...': snapshot2.data.data[index].vendorId.name,
                                                                         style: TextStyle(
                                                                           fontSize: 15.0),
                                                                       ),
@@ -354,6 +343,26 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                                                   ),
                                                                 )
                                                             ),
+                                                            // Expanded(
+                                                            //   child: Stack(
+                                                            //     children: [
+                                                            //       Positioned(
+                                                            //         top: 10,
+                                                            //         right: 5,
+                                                            //         child: InkWell(
+                                                            //           onTap: () {
+                                                            //
+                                                            //           },
+                                                            //           child: Icon(
+                                                            //             Icons
+                                                            //                 .favorite_border,
+                                                            //             color: Colors.grey,
+                                                            //           ),
+                                                            //         ),
+                                                            //       )
+                                                            //     ],
+                                                            //   ),
+                                                            // )
                                                           ],
                                                         ),
                                                       ),

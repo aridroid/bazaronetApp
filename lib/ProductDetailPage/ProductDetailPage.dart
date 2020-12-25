@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bazaronet_fresh/HomePage/HomePage.dart';
-import 'package:bazaronet_fresh/LoginPage/LoginPage.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/Model/AddToCartModel.dart';
 import 'package:bazaronet_fresh/ProductDetailPage/Model/SendToCartModel.dart'
     as sendProduct;
 import 'package:bazaronet_fresh/ProductDetailPage/ProductDetailBloc.dart';
 import 'package:bazaronet_fresh/SubCategoryPage/Model/ProductModel.dart'
     as productData;
-import 'package:bazaronet_fresh/VerificationPage/VerificationPage.dart';
 import 'package:bazaronet_fresh/helper/api_response.dart';
 import 'package:bazaronet_fresh/new_login_page/new_login_page.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -19,7 +17,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class productdetails extends StatefulWidget {
   productData.Data data;
@@ -857,7 +854,7 @@ class _productdetailsState extends State<productdetails> {
 
   navigateScreen(context) {
     if (CheckValue) {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => HomePage.second(selectedIndex: 2)));

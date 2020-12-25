@@ -443,15 +443,15 @@ class _cartState extends State<Cart> {
                                         Spacer(),
                                         Row(
                                           children: [
-                                            Text("Sold By ",
+                                            Text(snapshot.data.data[index].product.category.name != "Service" ? "Sold By ": "Provided By ",
                                               style: TextStyle(
                                                   fontSize: 15.0,
                                                   color: Colors.blue[800],
                                                   fontWeight: FontWeight.bold
                                               ),
                                             ),
-                                            Text(snapshot.data.data[index].product.vendorId.name.length > 19 ?
-                                            '${snapshot.data.data[index].product.vendorId.name.substring(0,19)}...': snapshot.data.data[index].product.vendorId.name,
+                                            Text(snapshot.data.data[index].product.vendorId.name.length > 16 ?
+                                            '${snapshot.data.data[index].product.vendorId.name.substring(0,16)}...': snapshot.data.data[index].product.vendorId.name,
                                               style: TextStyle(
                                                   fontSize: 15.0),
                                             ),
@@ -546,9 +546,6 @@ class _cartState extends State<Cart> {
           ),
           child: Column(
             children: [
-              SizedBox(
-                height: 5,
-              ),
               returnFutureList(),
               Divider(),
               Container(

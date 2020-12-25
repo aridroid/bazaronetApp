@@ -177,15 +177,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                   Container() :
                                                   Row(
                                                     children: [
-                                                      Text("Sold By ",
+                                                      Text(widget.orderedData.products[index].product.category.name != "Service" ? "Sold By ": "Provided By ",
                                                         style: TextStyle(
                                                             fontSize: 15.0,
                                                             color: Colors.blue[800],
                                                             fontWeight: FontWeight.bold
                                                         ),
                                                       ),
-                                                      Text(widget.orderedData.products[index].product.vendorId.name.length > 19 ?
-                                                      '${widget.orderedData.products[index].product.vendorId.name.substring(0,19)}...': widget.orderedData.products[index].product.vendorId.name,
+                                                      Text(widget.orderedData.products[index].product.vendorId.name.length > 16 ?
+                                                      '${widget.orderedData.products[index].product.vendorId.name.substring(0,16)}...': widget.orderedData.products[index].product.vendorId.name,
                                                         style: TextStyle(
                                                             fontSize: 15.0),
                                                       ),

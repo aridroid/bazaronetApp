@@ -442,7 +442,7 @@ class _ServiceDetailPageState extends State<ServiceDetailPage> {
                         padding: EdgeInsets.only(left: 10, top: 2),
                         child: Row(
                           children: [
-                            Text("Sold By ",
+                            Text("Provided By ",
                               style: TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.blue[800],
@@ -814,7 +814,7 @@ class _ServiceDetailPageState extends State<ServiceDetailPage> {
 
   navigateScreen(context) {
     if (CheckValue) {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => HomePage.second(selectedIndex: 2)
