@@ -260,6 +260,7 @@ class _RazorPayScreenState extends State<RazorPayScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+
     _razorPayBloc.addOrder(widget.product);
     // _showResponse("Success");
 
